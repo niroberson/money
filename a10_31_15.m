@@ -8,3 +8,6 @@ rels = readtable('predication_aggregate1.csv');
 % Create an algorithm to search for a concept and print out the concept:
 % distance results
 
+% Search for a concept in the nodes table
+search = 'Breast Cancer';
+index = strfind(nodes(:, 1), search);
