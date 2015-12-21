@@ -14,4 +14,4 @@ class Database:
 
     @staticmethod
     def create_endpoint(host, user, password):
-        return "http://" + user + ":" + "password" + "@" + host
+        return "http://" + user + ":" + password + "@" + host
