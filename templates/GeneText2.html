@@ -1,0 +1,111 @@
+<html>
+
+<head>
+		<br><br><br><br><br>
+		
+		<meta content="About Us" about="/query" property="dc:title" />
+		<meta charset='utf-8'> 
+		<link rel="shortcut icon" href="/static/tree.png" type="image/png">
+		<link rel="icon" href="/static/tree.png" type="image/png">
+		
+		<title>Setation</title>
+        <div align='center'><a href=/about>	
+		<img src="/static/logo.png"></a>
+		</a>
+		<h2><font face="helvetica">An Interactive Biomedical Search Engine</font></h2>
+		</div>
+		
+		<link rel='stylesheet' type='text/css' href='/static/css/stylesheet.css'/>
+		
+<style type="text/css">
+.sweet {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}.sweet:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}.sweet:active {
+	position:relative;
+	top:1px;
+}
+
+
+.logo {
+	float:left;
+	margin-left:30%;
+	margin-right:10px
+}
+.logo2{
+	float:left;
+}
+	
+.wrapper {
+		width:50%;
+		margin: 0 auto;
+}
+
+</style>
+		
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-42745031-1', 'vt.edu');
+  ga('send', 'pageview');
+
+</script>
+</head>
+	
+	
+<body>
+
+<div class="wrapper">
+<br>
+
+<div align='center'>
+<form action="/analyze" method="GET" >
+<font face="helvetica"><strong>Input your list</strong><br> </font>
+<textarea name="genes"  rows="7" cols="50">BRCA1, BRCA2</textarea><br>
+<input class="sweet" type="submit" value="Find Associations">
+</form>
+<br>
+
+<div class="logo">
+<a href="https://www.vbi.vt.edu/faculty/group_overview/Garner_Research_Group" target=_blank>
+<img src="/static/vbi_logo.png" style="width:200px; height:50px;"/>
+</a>
+</div>
+
+
+<div class="logo2">
+<a href="http://www.hhmi.org" target=_blank>
+<img src="/static/hhmi.png" style="width:200px; height:50px"/>
+</a>
+</div>
+
+</div>
+
+
+</body>
+</html>
