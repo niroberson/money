@@ -8,5 +8,8 @@ class Query:
 
     def get_node(self, search_input):
         cypher_query = "MATCH (n { NAME:'" + search_input + "'}) RETURN n"
-        for node in self.db.cypher.execute(cypher_query):
-            print(node[0])
+        return self.db.cypher.execute(cypher_query)
+
+    def get_rels_from_node(self, node):
+        cypher_query = "MATCH (n { CONCEPTID:'" + node.properties['CONCEPTID'] + "'}) RETURN n"
+        return self.db.cypher.execute(cypher_query)
