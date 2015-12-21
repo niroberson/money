@@ -1,0 +1,195 @@
+<html>
+
+<head>
+
+		<div class="header">
+		<title>Setation: View Abstracts</title>
+		<meta charset='utf-8'> 
+		
+		<div class="logo">
+		<a href="http://www.vbi.vt.edu" target=_blank>
+		<img src="/static/vbi_logo.png" style="width:200px; heigth:50px;" />
+		</a>
+		</div>
+		
+		<div class="head">
+		<a href=/query><img src="/static/logo.png"></a>
+		</div>
+		
+
+		
+		<div class="logo2">		
+		<a href="http://www.hhmi.org" target=_blank>
+		<img src="/static/hhmi.png"  style="width:200px; height:50px"/>
+		</a></div>
+		<br><br><br><br><br>
+		</div>
+		
+		<h2 align="center">An Interactive Biomedical Search Engine</h2>
+
+		
+		<link rel='stylesheet' type='text/css' href='/static/css/stylesheet.css'/>
+		<META http-equiv="Content-Style-Type" content="text/css">
+		
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-42745031-1', 'vt.edu');
+  ga('send', 'pageview');
+
+</script>
+	
+<style type="text/css">
+.logo {
+	float:left;
+	}
+	
+	
+.logo2 {
+	float:right;
+	margin-left:3px;
+}
+
+.sweet {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}.sweet:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}.sweet:active {
+	position:relative;
+	top:1px;
+}
+
+table.one td{
+		padding:3px;
+		color: #333;
+		line-height: 20px;
+		font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+		font-size: 12px;
+		border-bottom: 1px solid #fff;
+		border-top: 1px solid #fff;
+}
+table.one {
+	width:100%;
+   border-collapse:separate;
+   border-spacing:10px 10px;
+   background-color: #f2f2f2;
+   border-radius: 6px;
+   -webkit-border-radius: 6px;
+	-moz-border-radius: 6px;
+ 
+}
+
+.wrapper {
+		width:90%;
+		margin: 0 auto;
+}
+.header {
+		   background-color: #ffffff;
+		border-radius: 6px;
+		-webkit-border-radius: 6px;
+		-moz-border-radius: 6px;
+		padding:25px
+		
+}
+.footer {
+		clear:both;
+		position: relative;
+		z-index:10;
+		height:7em;
+		margin-top:-3em;
+		background-color: #f2f2f2;
+		border-radius: 6px;
+		-webkit-border-radius: 6px;
+		-moz-border-radius: 6px;
+}
+
+.head {
+		float:left;
+		margin-left:28%;
+		}
+		
+</style>
+</head>
+	
+	
+
+<div class="wrapper">
+
+
+
+{%autoescape off%}
+
+<br><br>
+<div align="center">
+<strong>Here are {{shown}} of {{total}} abstracts for:</strong><br>  {{genes|join:", "}}<br> {{item|join:", "}}<br>
+</div>
+
+
+<div align='left'><font size="2.5">
+<table class="one">
+<form action="/" method="GET">
+{%for ab in abs%}
+<tr><td>
+<input type = "checkbox" name="abstracts" value="{{ab.0}}" />
+ <a href={{ab.3}} target=_blank>{{ab.0}}</a><br>
+Authors: {{ab.1|join:", "}}<br>
+Journal: {{ab.4}} <br>
+Date: {{ab.5}}<br><br>
+<div>Abstract: {{ab.2|safe}}<br></div><br>
+{{ab.6|length}} words found in abstract: {{ab.6|join:", "}}
+</td></tr>
+{%endfor%}
+</table>
+</font>
+</form>
+</div>
+{%endautoescape%}
+
+<div align= 'center'>
+<form action="/more_abs" method="GET">
+<input type="submit" class="sweet" value="Show 100">
+<input type="hidden" value="{{genes|join:", "}}" name="genes">
+<input type="hidden" value="100" name="shown">
+<input type="hidden" value="{{item|join:", "}}" name='item2' >
+
+</div>
+<br><br>
+</div>
+
+
+<div class="footer" align="center">
+<br>
+<strong>Made by Nathan Roberson and Dr. Skip Garner at the Virginia Bioinformatics Institute
+<br>
+ Acknowledgements: Zalman Vaksman, Garner Lab, VBI Helpdesk
+<br><address>setation@vbi.vt.edu</address>
+</strong>
+
+</div>
+
+</html>
+
