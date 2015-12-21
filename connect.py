@@ -1,6 +1,6 @@
+from py2neo import Graph
 __author__ = 'nathir2'
 
-from py2neo import Graph
 
 class Database:
     def __init__(self):
