@@ -11,11 +11,11 @@ class Query:
     def execute_query(self, cypher_query):
         if self.dev:
             cypher_query += " LIMIT 20"
-        self.db.cypher.execute(cypher_query)
+        return self.db.cypher.execute(cypher_query)
 
     def get_node(self, search_input):
         cypher_query = "MATCH (n:Concept { NAME:'" + search_input + "'}) RETURN n"
-        return self.execute_query(cypher_query)
+        return self.db.cypher.execute(cypher_query)
 
     def get_node_rels(self, node):
         if isinstance(node, Record):
