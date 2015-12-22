@@ -23,7 +23,7 @@ class Query:
 
     def get_rel(self, node1, node2):
         if isinstance(node1, Record):
-            node = node1[0]
+            node1 = node1[0]
         if isinstance(node2, Record):
-            node = node1[0]
+            node2 = node2[0]
         cypher_query = "MATCH (n { CUI:'" + node1.properties['CUI'] + "'})-[r]-(c { CUI:'" + node2.properties['CUI'] + "'})" + "RETURN r"
