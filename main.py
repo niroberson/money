@@ -8,5 +8,6 @@ if __name__ == "__main__":
     node = node[0][0]
     direct_rels = q.get_node_rels(node)
     direct_nodes = q.get_direct_nodes(node)
-    print(direct_rels)
-    print(direct_nodes)
+    print(len(direct_rels))
+    print(len(direct_nodes))
+    print(direct_rels[0])
