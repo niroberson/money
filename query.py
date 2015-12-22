@@ -10,6 +10,10 @@ class Query:
         cypher_query = "MATCH (n { NAME:'" + search_input + "'}) RETURN n"
         return self.db.cypher.execute(cypher_query)
 
-    def get_rels_from_node(self, node):
-        cypher_query = "MATCH (n { CONCEPTID:'" + node.properties['CONCEPTID'] + "'}) RETURN n"
+    def get_node_rels(self, node):
+        cypher_query = "MATCH (n { CUI:'" + node.properties['CUI'] + "'})-[r]-c RETURN r"
+        return self.db.cypher.execute(cypher_query)
+
+    def get_direct_nodes(self, node):
+        cypher_query = "MATCH (n { CUI:'" + node.properties['CUI'] + "'})-[r]-c RETURN c"
         return self.db.cypher.execute(cypher_query)
