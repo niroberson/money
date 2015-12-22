@@ -19,7 +19,7 @@ class Algorithm:
 
     def get_num_rel(self, node1, node2):
         rel = self.query.get_rel(node1, node2)
-        return int(rel.properties['COUNT'])
+        return int(rel[0][0].properties['COUNT'])
 
     def ksp(self):
         node_of_interest = self.search_nodes("2-Acetolactate Mutase")
