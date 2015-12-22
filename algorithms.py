@@ -18,8 +18,8 @@ class Algorithm:
         return total
 
     def get_num_rel(self, node1, node2):
-        rel = self.query.get_rel(node1,node2)
-        return rel[0][0].properties['COUNT']
+        rel = self.query.get_rel(node1, node2)
+        return rel[0].properties['COUNT']
 
     def ksp(self):
         node_of_interest = self.search_nodes("2-Acetolactate Mutase")

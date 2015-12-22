@@ -27,3 +27,4 @@ class Query:
         if isinstance(node2, Record):
             node2 = node2[0]
         cypher_query = "MATCH (n { CUI:'" + node1.properties['CUI'] + "'})-[r]-(c { CUI:'" + node2.properties['CUI'] + "'})" + "RETURN r"
+        return self.db.cypher.execute(cypher_query)
