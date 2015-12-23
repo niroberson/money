@@ -28,8 +28,8 @@ class Analysis:
         d = ([1/ksp - 1])
         return d
 
-    def compute_distances_single_source_node(self, ):
-        node_of_interest = self.search_nodes("2-Acetolactate Mutase")
+    def compute_distances_single_source_node(self, keyword):
+        node_of_interest = self.search_nodes(keyword)
         n_i = self.get_num_rels(node_of_interest)
         direct_nodes = self.query.get_direct_nodes(node_of_interest)
         d = []
