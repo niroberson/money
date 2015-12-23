@@ -1,5 +1,4 @@
 from algorithms import Algorithm
-__author__ = 'nathir2'
 
 
 if __name__ == "__main__":

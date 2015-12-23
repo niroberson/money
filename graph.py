@@ -1,5 +1,3 @@
-__author__ = 'nathir2'
-
 
 class Concept:
     def __init__(self, properties):

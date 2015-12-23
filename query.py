@@ -1,6 +1,5 @@
 from connect import Database
 from py2neo.cypher.core import Record
-__author__ = 'nathir2'
 
 
 class Query:

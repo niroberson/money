@@ -1,5 +1,4 @@
 from py2neo import Graph
-__author__ = 'nathir2'
 
 
 class Database:

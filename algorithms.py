@@ -1,5 +1,4 @@
 from query import Query
-__author__ = 'nathir2'
 
 class Algorithm:
     def __init__(self):
