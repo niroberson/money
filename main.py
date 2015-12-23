@@ -1,4 +1,4 @@
-from algorithms import Analysis
+from analysis import Analysis
 
 
 if __name__ == "__main__":
