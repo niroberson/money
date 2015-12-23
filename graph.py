@@ -7,7 +7,6 @@ class Concept:
         self.name = properties['NAME']
         self.cui = properties['CUI']
 
-
 class Relationship:
     def __init__(self, properties):
         self.predication_name = properties['NAME']
@@ -29,4 +28,8 @@ class Graph:
     def add_relationships(self, results_table):
         # Format : [(a,b, dist), (b,c, dist)]
         self.graph.add_weighted_edges_from(results_table)
-        
+
+    def analyze(self, source_node):
+        paths = nx.single_source_dijkstra_path(self.graph, source_node)
+        lengths = nx.single_source_dijkstra_path_length(self.graph, source_node)
+
