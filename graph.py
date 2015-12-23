@@ -7,6 +7,7 @@ class Concept:
         self.name = properties['NAME']
         self.cui = properties['CUI']
 
+
 class Relationship:
     def __init__(self, properties):
         self.predication_name = properties['NAME']
@@ -20,14 +21,10 @@ class Graph:
     def __init__(self):
         self.graph = nx.Graph()
 
-    def add_nodes(self, source, targets):
-        # Use the CUI to add nodes
-        self.graph.add_nodes_from(source)
-        self.graph.add_nodes_from(targets)
-
-    def add_relationships(self, results_table):
+    def create_graph(self, nodes, distances):
         # Format : [(a,b, dist), (b,c, dist)]
-        self.graph.add_weighted_edges_from(results_table)
+        self.graph.add_nodes_from([nodes])
+        self.graph.add_weighted_edges_from(distances)
 
     def analyze(self, source_node):
         paths = nx.single_source_dijkstra_path(self.graph, source_node)

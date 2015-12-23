@@ -1,7 +1,7 @@
 from query import Query
 
 
-class Analysis:
+class Analyzer:
     def __init__(self):
         self.query = Query()
 
@@ -32,7 +32,7 @@ class Analysis:
         node_of_interest = self.search_nodes(keyword)
         n_i = self.get_num_rels(node_of_interest)
         direct_nodes = self.query.get_direct_nodes(node_of_interest)
-        d = [] # TODO: Change to dataframe with source - target - distance
+        d = []# TODO: Change to graph object with source - target - distance
         for node in direct_nodes:
             d.append(self.compute_distance(node_of_interest, node, n_i))
         return d
