@@ -1,4 +1,5 @@
 from query import Query
+from pandas import DataFrame
 
 
 class Analyzer:
@@ -32,7 +33,9 @@ class Analyzer:
         node_of_interest = self.search_nodes(keyword)
         n_i = self.get_num_rels(node_of_interest)
         direct_nodes = self.query.get_direct_nodes(node_of_interest)
-        d = []# TODO: Change to graph object with source - target - distance
+        df = DataFrame()
         for node in direct_nodes:
-            d.append(self.compute_distance(node_of_interest, node, n_i))
-        return d
+            dx = self.compute_distance(node_of_interest, node, n_i)
+            dfx = DataFrame([[node_of_interest.properties['CUI'], node[0].properties['CUI'], dx]], columns=['source', 'target', 'distance'])
+            df = df.append(dfx)
+        return df

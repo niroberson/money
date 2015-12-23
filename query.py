@@ -12,8 +12,12 @@ class Query:
             cypher_query += " LIMIT 20"
         return self.db.cypher.execute(cypher_query)
 
-    def get_node(self, search_input):
+    def get_node_by_name(self, search_input):
         cypher_query = "MATCH (n:Concept { NAME:'" + search_input + "'}) RETURN n"
+        return self.db.cypher.execute(cypher_query)
+
+    def get_node_by_id(self, node):
+        cypher_query = ""
         return self.db.cypher.execute(cypher_query)
 
     def get_node_rels(self, node):
