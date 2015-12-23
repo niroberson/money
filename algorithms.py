@@ -1,6 +1,7 @@
 from query import Query
 
-class Algorithm:
+
+class Analysis:
     def __init__(self):
         self.query = Query()
 
@@ -19,15 +20,19 @@ class Algorithm:
         rel = self.query.get_rel(node1, node2)
         return int(rel[0][0].properties['COUNT'])
 
-    def ksp(self):
+    def compute_distance(self, node_source, node_target, n_i):
+        print('Calculating distance for %s' % node_target[0].properties['NAME'])
+        n_j = self.get_num_rels(node_target)
+        n_i_j = self.get_num_rel(node_source, node_target)
+        ksp = n_i_j/(n_i+n_j-n_i_j)
+        d = ([1/ksp - 1])
+        return d
+
+    def compute_distances_single_source_node(self):
         node_of_interest = self.search_nodes("2-Acetolactate Mutase")
-        N_i = self.get_num_rels(node_of_interest)
+        n_i = self.get_num_rels(node_of_interest)
         direct_nodes = self.query.get_direct_nodes(node_of_interest)
         d = []
         for node in direct_nodes:
-            print('Calculating distance for %s' % node[0].properties['NAME'])
-            N_j = self.get_num_rels(node)
-            N_i_j = self.get_num_rel(node_of_interest, node)
-            KSP = N_i_j/(N_i+N_j-N_i_j)
-            d.append([1/KSP - 1])
+            d.append(self.compute_distance(node_of_interest, node, n_i))
         return d
