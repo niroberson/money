@@ -32,6 +32,7 @@ class Query:
             node1 = node1[0]
         if isinstance(node2, Record):
             node2 = node2[0]
+        # Not necessarily one edge between nodes can't take [0] need to specify rel label
         cypher_query = "MATCH (n:Concept { CUI:'" + node1.properties['CUI'] + "'})-[r]-(c { CUI:'" + node2.properties['CUI'] + "'})" + "RETURN r"
         return self.execute_query(cypher_query)
 
