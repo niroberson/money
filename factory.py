@@ -1,6 +1,5 @@
 from analysis import Analyzer
 
-
 class RecommenderFactory:
     # factory class to use analyzer, graph, query, and results class
     def __init__(self):

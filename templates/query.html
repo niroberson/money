@@ -7,6 +7,7 @@
 </h1>
 {% if keyword %}
 <h2>Searching for {{ keyword }} !</h2>
+<p>{{ results }}</p>
 {% else %}
 <form action="/query" method="POST">
     <p><input type=text name=keyword /></p>
