@@ -29,8 +29,11 @@ def submit_query():
             keyword = request.form['keyword']
         except KeyError:
             error = 'No keyword entered or could be found'
-        results = RecommenderFactory().search_keyword(keyword)
-        return render_template('query.html', keyword=keyword, results=results)
+        results, error = RecommenderFactory().search_keyword(keyword)
+        if error:
+            return render_template('query.html', keyword=keyword, error=error)
+        else:
+            return render_template('query.html', keyword=keyword, results=results)
     return render_template('query.html')
 
 

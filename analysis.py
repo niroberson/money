@@ -1,6 +1,6 @@
 from query import Query
 from pandas import DataFrame
-
+from py2neo.cypher.core import RecordList
 
 class Analyzer:
     def __init__(self):
@@ -8,7 +8,7 @@ class Analyzer:
 
     def search_nodes(self, keyword):
         node = self.query.get_node_by_name(keyword)
-        return node[0][0]
+        return node [0][0]
 
     def get_num_rels(self, node):
         rels = self.query.get_node_rels(node)
@@ -29,8 +29,7 @@ class Analyzer:
         d = ([1/ksp - 1])
         return d
 
-    def compute_distances_single_source_node(self, keyword):
-        node_of_interest = self.search_nodes(keyword)
+    def compute_distances_single_source_node(self, node_of_interest):
         n_i = self.get_num_rels(node_of_interest)
         direct_nodes = self.query.get_direct_nodes(node_of_interest)
         df = DataFrame()
