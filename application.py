@@ -12,12 +12,6 @@ PASSWORD = 'default'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-
-@app.before_request
-def before_request():
-    g.db = Database().connect_local()
-
-
 @app.route('/')
 def home():
     return render_template('query.html')
