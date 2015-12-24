@@ -7,7 +7,7 @@ class Analyzer:
         self.query = Query()
 
     def search_nodes(self, keyword):
-        node = self.query.get_node(keyword)
+        node = self.query.get_node_by_name(keyword)
         return node[0][0]
 
     def get_num_rels(self, node):
