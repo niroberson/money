@@ -13,7 +13,6 @@ class RecommenderFactory:
         results = self.Analyzer.compute_distances_single_source_node(keyword)
 
 
-
 if __name__ == "__main__":
     rf = RecommenderFactory()
     rf.search_keyword('BRCA1')
