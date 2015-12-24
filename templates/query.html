@@ -6,11 +6,11 @@
     Welcome to the Money Project Landing Page
 </h1>
 {% if keyword %}
-<h2>Searching for {{ keyword }} !</h2>
+<h2>Searching for <strong>{{ keyword }}</strong></h2>
 {% if error %}
 <p><font color="red">{{ error }}</font></p>
 {% else %}
-<p>{{ results }}</p>
+{{ results|safe }}
 {% endif %}
 {% else %}
 <form action="/query" method="POST">
