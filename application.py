@@ -27,6 +27,7 @@ def submit_query():
         if error:
             return render_template('query.html', keyword=keyword, error=error)
         else:
+            results = results.to_html()
             return render_template('query.html', keyword=keyword, results=results)
     return render_template('query.html')
 

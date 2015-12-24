@@ -9,7 +9,7 @@ class Query:
 
     def execute_query(self, cypher_query):
         if self.dev:
-            cypher_query += " LIMIT 20"
+            cypher_query += " LIMIT 5"
         return self.db.cypher.execute(cypher_query)
 
     def get_node_by_name(self, search_input):
