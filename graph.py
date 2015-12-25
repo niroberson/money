@@ -1,4 +1,5 @@
 import networkx as nx
+from analysis import Analyzer
 
 
 class Node:
@@ -15,6 +16,13 @@ class Edge:
         self.source_node = Node(relationship.start_node)
         self.target_node = Node(relationship.end_node)
         self.distance = None
+        self.get_distance()
+
+    def get_distance(self):
+        if self.properties.score:
+            self.distance = self.properties.score
+        else:
+            self.distance = Analyzer().compute_distance(self.source_node, self.target_node)
 
 
 class Graph:
@@ -42,5 +50,5 @@ class Graph:
         self.graph.add_weighted_edges_from(edge_list)
 
     def get_shortest_paths(self, source_node):
-        return nx.single_source_dijkstra_path_length(self.graph, source_node)
+        return nx.single_source_dijkstra_path_length(self.graph, source_node.id)
 

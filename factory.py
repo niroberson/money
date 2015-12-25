@@ -26,15 +26,4 @@ class RecommenderFactory:
         # Get a dictionary of the shortest paths based on this node
         self.graph.get_shortest_paths(node_of_interest)
 
-
-    def compute_distances_single_source_node(self, node_of_interest):
-        n_i = self.get_num_rels(node_of_interest)
-        direct_nodes = self.database.get_direct_nodes(node_of_interest)
-        df = DataFrame()
-        for node in direct_nodes:
-            dx = self.compute_distance(node_of_interest, node, n_i)
-            dfx = DataFrame([[node_of_interest.properties['NAME'], node_of_interest.properties['CUI'],
-                              node[0].properties['NAME'], node[0].properties['CUI'], dx]],
-                            columns=['source_name', 'source_id', 'target_name', 'target_id', 'distance'])
-            df = df.append(dfx)
-        return df
+        # Return a table sorted by shortest path lengths

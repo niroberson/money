@@ -50,3 +50,15 @@ class Database:
         # Not necessarily one edge between nodes can't take [0] need to specify rel label
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + node1.id + " AND id(b)=" + node2.id + " RETURN r"
         return self.execute_query(cypher_query)
+
+    def get_count_direct_edges(self, node):
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(r)"
+        return self.connection.cypher.execute(cypher_query)
+
+    def get_count_direct_nodes(self, node):
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(b)"
+        return self.connection.cypher.execute(cypher_query)
+
+    def get_count_between_nodes(self, node1, node2):
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + node1.id + " AND id(b)=" + node2.id + " RETURN count(r)"
+        return self.connection.cypher.execute(cypher_query)
