@@ -35,6 +35,8 @@ class Analyzer:
         df = DataFrame()
         for node in direct_nodes:
             dx = self.compute_distance(node_of_interest, node, n_i)
-            dfx = DataFrame([[node_of_interest.properties['CUI'], node[0].properties['CUI'], dx]], columns=['source', 'target', 'distance'])
+            dfx = DataFrame([[node_of_interest.properties['NAME'], node_of_interest.properties['CUI'],
+                              node[0].properties['NAME'], node[0].properties['CUI'], dx]],
+                            columns=['source_name', 'source_id', 'target_name', 'target_id', 'distance'])
             df = df.append(dfx)
         return df

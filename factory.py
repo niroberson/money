@@ -19,9 +19,9 @@ class RecommenderFactory:
         else:
             results = self.Analyzer.compute_distances_single_source_node(node_of_interest)
 
-        if results:
+        # if results:
             # Order results by distance
             # results.sort()
-            pass
-        
+            # pass
+
         return results, error
