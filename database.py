@@ -44,7 +44,7 @@ class Database:
         node_list = []
         for nodeX in self.execute_query(cypher_query):
             node_list.append(Node(nodeX.b))
-        return self.execute_query(cypher_query)
+        return node_list
 
     def get_edges_between_nodes(self, node1, node2):
         # Not necessarily one edge between nodes can't take [0] need to specify rel label
