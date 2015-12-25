@@ -1,8 +1,9 @@
 from py2neo import Graph
 from graph import Node, Edge
 
+
 class Database:
-    def __init__(self, dev_flag):
+    def __init__(self, dev_flag=True):
         self.user = "neo4j"
         self.password = "newk1ng$!"
         self.host_local = "localhost:7474/db/data"

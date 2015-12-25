@@ -1,5 +1,4 @@
 import networkx as nx
-from analysis import Analyzer
 
 
 class Node:
@@ -16,13 +15,6 @@ class Edge:
         self.source_node = Node(relationship.start_node)
         self.target_node = Node(relationship.end_node)
         self.distance = None
-        self.get_distance()
-
-    def get_distance(self):
-        if self.properties.score:
-            self.distance = self.properties.score
-        else:
-            self.distance = Analyzer().compute_distance(self.source_node, self.target_node)
 
 
 class Graph:
