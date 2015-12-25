@@ -32,14 +32,12 @@ class Graph:
         # Create list of edges injestible by NetworkX
         edge_list = []
         for edge in self.edges:
-            edge_list.append([edge.source_node.id, edge.target_node.id, edge.distance])
+            edge_list.append((edge.source_node.id, edge.target_node.id, edge.distance))
 
         # Create the networkX graph from these lists
         self.graph = nx.MultiDiGraph()
         self.graph.add_nodes_from(node_list)
         self.graph.add_weighted_edges_from(edge_list)
 
-    def analyze(self, source_node):
-        paths = nx.single_source_dijkstra_path(self.graph, source_node)
-        lengths = nx.single_source_dijkstra_path_length(self.graph, source_node)
+
 

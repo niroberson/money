@@ -1,7 +1,6 @@
 from query import Query
 from pandas import DataFrame
-from py2neo.cypher.core import RecordList
-
+import networkx as nx
 
 class Analyzer:
     def __init__(self, dev_flag):
@@ -9,7 +8,7 @@ class Analyzer:
 
     def search_nodes(self, keyword):
         node = self.query.get_node_by_name(keyword)
-        return node[0][0]
+        return node
 
     def get_num_rels(self, node):
         rels = self.query.get_node_rels(node)
@@ -41,3 +40,7 @@ class Analyzer:
                             columns=['source_name', 'source_id', 'target_name', 'target_id', 'distance'])
             df = df.append(dfx)
         return df
+
+    def analyze(self, source_node):
+        paths = nx.single_source_dijkstra_path(self.graph, source_node)
+        lengths = nx.single_source_dijkstra_path_length(self.graph, source_node)
