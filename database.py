@@ -32,14 +32,15 @@ class Database:
         return self.execute_query(cypher_query)
 
     def get_direct_edges(self, node):
-        cypher_query = "MATCH (n:Concept { CUI:'" + node.properties['CUI'] + "'})-[r]-c RETURN r"
+        cypher_query = "MATCH (n)-[r]-c WHERE id(n)=" + node.id + " RETURN r"
         return self.execute_query(cypher_query)
 
     def get_direct_nodes(self, node):
-        cypher_query = "MATCH (n:Concept { CUI:'" + node.properties['CUI'] + "'})-[r]-c RETURN c"
+        cypher_query = "MATCH (n)-[r]-(b) WHERE id(n)=" + node.id + "RETURN c"
         return self.execute_query(cypher_query)
 
     def get_edges_between_nodes(self, node1, node2):
         # Not necessarily one edge between nodes can't take [0] need to specify rel label
-        cypher_query = "MATCH (n:Concept { CUI:'" + node1.properties['CUI'] + "'})-[r]-(c { CUI:'" + node2.properties['CUI'] + "'})" + "RETURN r"
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + node1.id + " AND id(b)=" + node2.id + " RETURN r"
         return self.execute_query(cypher_query)
+    
