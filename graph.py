@@ -23,6 +23,7 @@ class Graph:
         self.nodes = nodes
         self.edges = edges
         self.graph = None
+        self.create_graph()
 
     def create_graph(self):
         # Create list of nodes digestible by NetworkX
@@ -40,5 +41,6 @@ class Graph:
         self.graph.add_nodes_from(node_list)
         self.graph.add_weighted_edges_from(edge_list)
 
-
+    def get_shortest_paths(self, source_node):
+        return nx.single_source_dijkstra_path_length(self.graph, source_node)
 

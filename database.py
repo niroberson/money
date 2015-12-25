@@ -1,5 +1,5 @@
 from py2neo import Graph
-
+from graph import Node, Edge
 
 class Database:
     def __init__(self, dev_flag):
@@ -33,14 +33,19 @@ class Database:
 
     def get_direct_edges(self, node):
         cypher_query = "MATCH (n)-[r]-c WHERE id(n)=" + node.id + " RETURN r"
-        return self.execute_query(cypher_query)
+        edge_list = []
+        for edgeX in self.execute_query(cypher_query):
+            edge_list.append(Edge(edgeX))
+        return edge_list
 
     def get_direct_nodes(self, node):
         cypher_query = "MATCH (n)-[r]-(b) WHERE id(n)=" + node.id + "RETURN c"
+        node_list = []
+        for nodeX in self.execute_query(cypher_query):
+            node_list.append(Node(nodeX))
         return self.execute_query(cypher_query)
 
     def get_edges_between_nodes(self, node1, node2):
         # Not necessarily one edge between nodes can't take [0] need to specify rel label
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + node1.id + " AND id(b)=" + node2.id + " RETURN r"
         return self.execute_query(cypher_query)
-    
