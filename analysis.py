@@ -1,4 +1,3 @@
-from query import Query
 import networkx as nx
 
 

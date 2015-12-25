@@ -6,7 +6,7 @@ class Database:
         self.user = "neo4j"
         self.password = "newk1ng$!"
         self.host_local = "localhost:7474/db/data"
-        self.db = self.connect_local()
+        self.connection = self.connect_local()
         self.dev_flag = dev_flag
 
     def connect_local(self):
@@ -20,16 +20,16 @@ class Database:
     def execute_query(self, cypher_query):
         if self.dev_flag:
             cypher_query += " LIMIT 5"
-        return self.db.cypher.execute(cypher_query)
+        return self.connection.cypher.execute(cypher_query)
 
     def get_node_by_name(self, search_input):
         cypher_query = "MATCH (n:Concept { NAME:'" + search_input + "'}) RETURN n"
-        node = self.db.cypher.execute(cypher_query)
+        node = self.execute_query(cypher_query)
         return node.one
 
-    def get_node_by_id(self, node):
-        cypher_query = ""
-        return self.db.cypher.execute(cypher_query)
+    def get_node_by_id(self, id):
+        cypher_query = "MATCH (n) WHERE id(n)=" + id + " RETURN n"
+        return self.execute_query(cypher_query)
 
     def get_direct_edges(self, node):
         cypher_query = "MATCH (n:Concept { CUI:'" + node.properties['CUI'] + "'})-[r]-c RETURN r"
