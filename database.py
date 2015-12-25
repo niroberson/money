@@ -40,7 +40,7 @@ class Database:
         return edge_list
 
     def get_direct_nodes(self, node):
-        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + "RETURN b"
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
         node_list = []
         for nodeX in self.execute_query(cypher_query):
             node_list.append(Node(nodeX))
