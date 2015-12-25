@@ -22,7 +22,7 @@ class Analyzer:
         return int(rel[0][0].properties['COUNT'])
 
     def compute_distance(self, node_source, node_target, n_i):
-        print('Calculating distance for %s' % node_target[0].properties['NAME'])
+        print('Calculating distance between %s and %s' % (node_source.properties['NAME'], node_target[0].properties['NAME']))
         n_j = self.get_num_rels(node_target)
         n_i_j = self.get_num_rel(node_source, node_target)
         ksp = n_i_j/(n_i+n_j-n_i_j)

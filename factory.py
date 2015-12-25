@@ -18,4 +18,10 @@ class RecommenderFactory:
             error = 'Error: A node does not exist for this keyword'
         else:
             results = self.Analyzer.compute_distances_single_source_node(node_of_interest)
+
+        if results:
+            # Order results by distance
+            # results.sort()
+            pass
+        
         return results, error
