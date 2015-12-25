@@ -1,9 +1,10 @@
 from analysis import Analyzer
 
+
 class RecommenderFactory:
     # factory class to use analyzer, graph, query, and results class
-    def __init__(self):
-        self.Analyzer = Analyzer()
+    def __init__(self, dev_flag):
+        self.Analyzer = Analyzer(dev_flag)
 
     def add_distance_field_to_graph(self):
         pass
@@ -19,9 +20,6 @@ class RecommenderFactory:
         else:
             results = self.Analyzer.compute_distances_single_source_node(node_of_interest)
 
-        # if results:
-            # Order results by distance
-            # results.sort()
-            # pass
+        # Sort results by distance
 
         return results, error

@@ -2,9 +2,10 @@ from query import Query
 from pandas import DataFrame
 from py2neo.cypher.core import RecordList
 
+
 class Analyzer:
-    def __init__(self):
-        self.query = Query()
+    def __init__(self, dev_flag):
+        self.query = Query(dev_flag)
 
     def search_nodes(self, keyword):
         node = self.query.get_node_by_name(keyword)

@@ -3,9 +3,9 @@ from py2neo.cypher.core import Record
 
 
 class Query:
-    def __init__(self):
+    def __init__(self, dev_flag):
         self.db = Database().connect_local()
-        self.dev = True
+        self.dev = dev_flag
 
     def execute_query(self, cypher_query):
         if self.dev:
@@ -40,5 +40,5 @@ class Query:
         return self.execute_query(cypher_query)
 
     def get_secondary_nodes(self, node):
-        cypher_query = "MATCH (a:Concept)--(b) WHERE a.CUI = 'C0008304' OPTIONAL MATCH (b)--(c)--(d) RETURN distinct d"
+        cypher_query = "MATCH (a:Concept { CUI:'" + node.properties['CUI'] + "'})--(b*2..3)--(c) RETURN C'"
         return self.execute_query(cypher_query)

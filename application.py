@@ -24,7 +24,7 @@ def submit_query():
             keyword = request.form['keyword']
         except KeyError:
             error = 'No keyword entered or could be found'
-        results, error = RecommenderFactory().search_keyword(keyword)
+        results, error = RecommenderFactory(DEBUG).search_keyword(keyword)
         if error:
             return render_template('query.html', keyword=keyword, error=error)
         else:
