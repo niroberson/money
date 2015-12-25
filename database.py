@@ -25,21 +25,22 @@ class Database:
     def get_node_by_name(self, search_input):
         cypher_query = "MATCH (n:Concept { NAME:'" + search_input + "'}) RETURN n"
         node = self.execute_query(cypher_query)
-        return node.one
+        return Node(node.one)
 
     def get_node_by_id(self, id):
         cypher_query = "MATCH (n) WHERE id(n)=" + id + " RETURN n"
-        return self.execute_query(cypher_query)
+        node = self.execute_query(cypher_query)
+        return Node(node.one)
 
     def get_direct_edges(self, node):
-        cypher_query = "MATCH (n)-[r]-c WHERE id(n)=" + node.id + " RETURN r"
+        cypher_query = "MATCH (n)-[r]-c WHERE id(n)=" + str(node.id) + " RETURN r"
         edge_list = []
         for edgeX in self.execute_query(cypher_query):
             edge_list.append(Edge(edgeX))
         return edge_list
 
     def get_direct_nodes(self, node):
-        cypher_query = "MATCH (n)-[r]-(b) WHERE id(n)=" + node.id + "RETURN c"
+        cypher_query = "MATCH (n)-[r]-(b) WHERE id(n)=" + str(node.id) + "RETURN c"
         node_list = []
         for nodeX in self.execute_query(cypher_query):
             node_list.append(Node(nodeX))
