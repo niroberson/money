@@ -1,30 +1,43 @@
 import networkx as nx
 
 
-class Concept:
-    def __init__(self, properties):
-        self.id = properties['ID']
-        self.name = properties['NAME']
-        self.cui = properties['CUI']
+class Node:
+    def __init__(self, node):
+        self.id = node._id
+        self.properties = node.properties
 
 
-class Relationship:
-    def __init__(self, properties):
-        self.predication_name = properties['NAME']
-        self.predication_id = properties['ID']
-        self.source_node = Concept(properties.source_node)
-        self.target_node = Concept(properties.target_node)
-
+class Edge:
+    def __init__(self, relationship):
+        self.id = relationship._id
+        self.type = relationship.type
+        self.properties = relationship.properties
+        self.source_node = Node(relationship.start_node)
+        self.target_node = Node(relationship.end_node)
+        self.distance = None
 
 class Graph:
     # Build a networkX graph from concepts and relationships
-    def __init__(self):
-        self.graph = nx.Graph()
+    def __init__(self, nodes, edges):
+        self.nodes = nodes
+        self.edges = edges
+        self.graph = None
 
-    def create_graph(self, nodes, distances):
-        # Format : [(a,b, dist), (b,c, dist)]
-        self.graph.add_nodes_from([nodes])
-        self.graph.add_weighted_edges_from(distances)
+    def create_graph(self):
+        # Create list of nodes injestible by NetworkX
+        node_list = []
+        for node in self.nodes:
+            node_list.append(node.id)
+
+        # Create list of edges injestible by NetworkX
+        edge_list = []
+        for edge in self.edges:
+            edge_list.append([edge.source_node.id, edge.target_node.id, edge.distance])
+
+        # Create the networkX graph from these lists
+        self.graph = nx.MultiDiGraph()
+        self.graph.add_nodes_from(node_list)
+        self.graph.add_weighted_edges_from(edge_list)
 
     def analyze(self, source_node):
         paths = nx.single_source_dijkstra_path(self.graph, source_node)

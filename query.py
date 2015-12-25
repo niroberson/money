@@ -3,7 +3,7 @@ from py2neo.cypher.core import Record
 
 
 class Query:
-    def __init__(self, dev_flag):
+    def __init__(self, dev_flag=False):
         self.db = Database().connect_local()
         self.dev = dev_flag
 
@@ -14,7 +14,8 @@ class Query:
 
     def get_node_by_name(self, search_input):
         cypher_query = "MATCH (n:Concept { NAME:'" + search_input + "'}) RETURN n"
-        return self.db.cypher.execute(cypher_query)
+        node = self.db.cypher.execute(cypher_query)
+        return node.one
 
     def get_node_by_id(self, node):
         cypher_query = ""
