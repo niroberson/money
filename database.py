@@ -1,14 +1,24 @@
-from connect import Database
-from py2neo.cypher.core import Record
+from py2neo import Graph
 
 
-class Query:
-    def __init__(self, dev_flag=False):
-        self.db = Database().connect_local()
-        self.dev = dev_flag
+class Database:
+    def __init__(self, dev_flag):
+        self.user = "neo4j"
+        self.password = "newk1ng$!"
+        self.host_local = "localhost:7474/db/data"
+        self.db = self.connect_local()
+        self.dev_flag = dev_flag
+
+    def connect_local(self):
+        endpoint = Database.create_endpoint(self.host_local, self.user, self.password)
+        return Graph(endpoint)
+
+    @staticmethod
+    def create_endpoint(host, user, password):
+        return "http://" + user + ":" + password + "@" + host
 
     def execute_query(self, cypher_query):
-        if self.dev:
+        if self.dev_flag:
             cypher_query += " LIMIT 5"
         return self.db.cypher.execute(cypher_query)
 

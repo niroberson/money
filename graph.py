@@ -16,6 +16,7 @@ class Edge:
         self.target_node = Node(relationship.end_node)
         self.distance = None
 
+
 class Graph:
     # Build a networkX graph from concepts and relationships
     def __init__(self, nodes, edges):
@@ -24,12 +25,12 @@ class Graph:
         self.graph = None
 
     def create_graph(self):
-        # Create list of nodes injestible by NetworkX
+        # Create list of nodes digestible by NetworkX
         node_list = []
         for node in self.nodes:
             node_list.append(node.id)
 
-        # Create list of edges injestible by NetworkX
+        # Create list of edges digestible by NetworkX
         edge_list = []
         for edge in self.edges:
             edge_list.append((edge.source_node.id, edge.target_node.id, edge.distance))
