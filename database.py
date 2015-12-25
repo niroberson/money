@@ -36,14 +36,14 @@ class Database:
         cypher_query = "MATCH (a)-[r]-b WHERE id(a)=" + str(node.id) + " RETURN r"
         edge_list = []
         for edgeX in self.execute_query(cypher_query):
-            edge_list.append(Edge(edgeX))
+            edge_list.append(Edge(edgeX.r))
         return edge_list
 
     def get_direct_nodes(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
         node_list = []
         for nodeX in self.execute_query(cypher_query):
-            node_list.append(Node(nodeX))
+            node_list.append(Node(nodeX.b))
         return self.execute_query(cypher_query)
 
     def get_edges_between_nodes(self, node1, node2):
