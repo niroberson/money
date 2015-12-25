@@ -15,7 +15,7 @@ class RecommenderFactory:
         # Find the node associated with this concept
         node_of_interest = self.database.get_node_by_name(concept)
 
-        # Get the subgraph connected to this node
+        # Get the sub-graph connected to this node
         nodes = self.database.get_direct_nodes(node_of_interest)
         edges = self.database.get_direct_edges(node_of_interest)
 

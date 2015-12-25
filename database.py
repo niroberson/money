@@ -23,24 +23,24 @@ class Database:
         return self.connection.cypher.execute(cypher_query)
 
     def get_node_by_name(self, search_input):
-        cypher_query = "MATCH (n:Concept { NAME:'" + search_input + "'}) RETURN n"
+        cypher_query = "MATCH (a:Concept { NAME:'" + search_input + "'}) RETURN a"
         node = self.execute_query(cypher_query)
         return Node(node.one)
 
     def get_node_by_id(self, id):
-        cypher_query = "MATCH (n) WHERE id(n)=" + id + " RETURN n"
+        cypher_query = "MATCH (a) WHERE id(a)=" + id + " RETURN a"
         node = self.execute_query(cypher_query)
         return Node(node.one)
 
     def get_direct_edges(self, node):
-        cypher_query = "MATCH (n)-[r]-c WHERE id(n)=" + str(node.id) + " RETURN r"
+        cypher_query = "MATCH (a)-[r]-b WHERE id(a)=" + str(node.id) + " RETURN r"
         edge_list = []
         for edgeX in self.execute_query(cypher_query):
             edge_list.append(Edge(edgeX))
         return edge_list
 
     def get_direct_nodes(self, node):
-        cypher_query = "MATCH (n)-[r]-(b) WHERE id(n)=" + str(node.id) + "RETURN c"
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + "RETURN b"
         node_list = []
         for nodeX in self.execute_query(cypher_query):
             node_list.append(Node(nodeX))
