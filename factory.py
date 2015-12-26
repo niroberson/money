@@ -45,7 +45,7 @@ class RecommenderFactory:
 
         # Return a table sorted by shortest path lengths
         print(paths)
-        Results(self.graph)
+        Results(nodes, edges, paths)
 
     def compute_distance(self, node_source, node_target):
         n_i = self.database.get_count_direct_edges(node_source)

@@ -2,8 +2,10 @@ from pandas import DataFrame
 
 
 class Results:
-    def __init__(self, graph):
-        self.graph = graph
+    def __init__(self, nodes, edges, paths):
+        self.nodes = nodes
+        self.edges = edges
+        self.path = paths
 
     def as_table(self):
         # Create table from distance results
