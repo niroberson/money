@@ -16,12 +16,13 @@ class RecommenderFactory:
         # Get the sub-graph connected to this node
 
         # Get BFS level 1
-        nodes, edges = self.database.bfs_from_node(node_of_interest, 2)
-        # nodes = self.database.get_direct_nodes(node_of_interest)
-        # edges = self.database.get_direct_edges(node_of_interest)
+        # nodes, edges = self.database.bfs_from_node(node_of_interest, 2)
+        nodes = self.database.get_direct_nodes(node_of_interest)
+        edges = self.database.get_direct_edges(node_of_interest)
 
-        # Get BFS level 2
-
+        for nodeX in nodes:
+            nodes.append(self.database.get_direct_nodes(nodeX))
+            edges.append(self.database.get_direct_edges(nodeX))
 
         # Compute distances between all concept relationships
         for edgeX in edges:

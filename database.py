@@ -68,13 +68,13 @@ class Database:
         return count.one
 
     def bfs_from_node(self, node, max_level):
-        cypher_query = "MATCH (a)-[r*1.." + str(max_level) + "]-(b) WHERE id(a)=" + str(node.id) + " RETURN r"
+        cypher_query = "MATCH (a)-[r*1.." + max_level + "]-(b) WHERE id(a)=" + str(node.id) + " RETURN r"
         # Create a Node object for every .b and a Edge for every .r
         response = self.execute_query(cypher_query)
         edge_list = []
         node_list = []
         for edgeX in response:
-            edge_list.append(Edge(edgeX.r[0]))
-            node_list.append(Node(edgeX.r[0].start_node))
-            node_list.append(Node(edgeX.r[0].end_node))
+            edge_list.append(Edge(edgeX.r1[0]))
+            node_list.append(Node(edgeX.r1[0].start_node))
+            node_list.append(Node(edgeX.r1[0].end_node))
         return node_list, edge_list
