@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from database import Database
 from graph import Node, Edge, Graph
+from results import Results
 
 
 class RecommenderFactory:
@@ -20,9 +21,15 @@ class RecommenderFactory:
         nodes = self.database.get_direct_nodes(node_of_interest)
         edges = self.database.get_direct_edges(node_of_interest)
 
+        new_nodes = []
+        new_edges = []
         for nodeX in nodes:
-            nodes.append(self.database.get_direct_nodes(nodeX))
-            edges.append(self.database.get_direct_edges(nodeX))
+            new_nodes.extend(self.database.get_direct_nodes(nodeX))
+            new_edges.extend(self.database.get_direct_edges(nodeX))
+
+        # Merge two lists
+        nodes.extend(new_nodes)
+        edges.extend(new_edges)
 
         # Compute distances between all concept relationships
         for edgeX in edges:
@@ -38,6 +45,7 @@ class RecommenderFactory:
 
         # Return a table sorted by shortest path lengths
         print(paths)
+        Results(self.graph)
 
     def compute_distance(self, node_source, node_target):
         n_i = self.database.get_count_direct_edges(node_source)

@@ -2,10 +2,8 @@ from pandas import DataFrame
 
 
 class Results:
-    def __init__(self, search_node, target_nodes, distances):
-        self.search_node = search_node
-        self.target_nodes = target_nodes
-        self.distances = distances
+    def __init__(self, graph):
+        self.graph = graph
 
     def as_table(self):
         # Create table from distance results
