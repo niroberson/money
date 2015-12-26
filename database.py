@@ -20,7 +20,7 @@ class Database:
 
     def execute_query(self, cypher_query):
         if self.dev_flag:
-            cypher_query += " LIMIT 15"
+            cypher_query += " LIMIT 100"
         return self.connection.cypher.execute(cypher_query)
 
     def get_node_by_name(self, search_input):
@@ -68,7 +68,7 @@ class Database:
         return count.one
 
     def bfs_from_node(self, node, max_level):
-        cypher_query = "MATCH (a)-[r*1.." + str(max_level) + "]-(b) RETURN r"
+        cypher_query = "MATCH (a)-[r*1.." + str(max_level) + "]-(b) WHERE id(a)=" + node.id + " RETURN r"
         # Create a Node object for every .b and a Edge for every .r
         response = self.execute_query(cypher_query)
         edge_list = []
