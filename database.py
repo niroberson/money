@@ -35,17 +35,22 @@ class Database:
 
     def get_direct_edges(self, node):
         cypher_query = "MATCH (a)-[r]-b WHERE id(a)=" + str(node.id) + " RETURN r"
-        edge_list = []
+        edge_store = dict()
         for edgeX in self.execute_query(cypher_query):
-            edge_list.append(Edge(edgeX.r))
-        return edge_list
+            edgeXs = Edge(edgeX.r)
+            edge_store[edgeXs.id] = edgeXs
+        return edge_store
 
-    def get_direct_nodes(self, node):
+    def get_direct_nodes(self, node, graph):
+        """
+        :param node: A single node of interest for which to get all nodes directly attached to it
+        :param graph: A graph storage for which to place the results of the query
+        :return: Graph with query results inside of it
+        """
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
-        node_list = []
         for nodeX in self.execute_query(cypher_query):
-            node_list.append(Node(nodeX.b))
-        return node_list
+            nodeXs = Node(nodeX.b)
+        return graph
 
     def get_edges_between_nodes(self, node1, node2):
         # Not necessarily one edge between nodes can't take [0] need to specify rel label

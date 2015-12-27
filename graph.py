@@ -1,17 +1,21 @@
 import networkx as nx
 
 
-class Node:
+class GraphObject:
+    def __init__(self, obj):
+        self.id = obj._id
+        self.properties = obj.properties
+
+
+class Node(GraphObject):
     def __init__(self, node):
-        self.id = node._id
-        self.properties = node.properties
+        GraphObject.__init__(self, node)
 
 
-class Edge:
+class Edge(GraphObject):
     def __init__(self, relationship):
-        self.id = relationship._id
+        GraphObject.__init__(self, relationship)
         self.type = relationship.type
-        self.properties = relationship.properties
         self.source_node = Node(relationship.start_node)
         self.target_node = Node(relationship.end_node)
         self.distance = None
@@ -22,10 +26,14 @@ class Graph:
     def __init__(self, nodes, edges):
         self.nodes = nodes
         self.edges = edges
-        self.graph = None
-        self.create_graph()
+        self.graph = nx.MultiDiGraph()
+        self.update_graph()
 
-    def create_graph(self):
+    def update_graph(self):
+        """
+        Method to create graph from internal nodes and edges
+        :return:
+        """
         # Create list of nodes digestible by NetworkX
         node_list = []
         for node in self.nodes:
@@ -36,11 +44,12 @@ class Graph:
         for edge in self.edges:
             edge_list.append((edge.source_node.id, edge.target_node.id, edge.distance))
 
-        # Create the networkX graph from these lists
-        self.graph = nx.MultiDiGraph()
+        # Update the networkX graph from these lists
         self.graph.add_nodes_from(node_list)
         self.graph.add_weighted_edges_from(edge_list)
 
     def get_shortest_paths(self, source_node):
         return nx.single_source_dijkstra_path_length(self.graph, source_node.id)
 
+    def get_node_from_id(self, id):
+        self.nodes

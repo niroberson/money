@@ -21,15 +21,9 @@ class RecommenderFactory:
         nodes = self.database.get_direct_nodes(node_of_interest)
         edges = self.database.get_direct_edges(node_of_interest)
 
-        new_nodes = []
-        new_edges = []
         for nodeX in nodes:
-            new_nodes.extend(self.database.get_direct_nodes(nodeX))
-            new_edges.extend(self.database.get_direct_edges(nodeX))
-
-        # Merge two lists
-        nodes.extend(new_nodes)
-        edges.extend(new_edges)
+            nodes.update(self.database.get_direct_nodes(nodeX))
+            edges.update(self.database.get_direct_edges(nodeX))
 
         # Compute distances between all concept relationships
         for edgeX in edges:
