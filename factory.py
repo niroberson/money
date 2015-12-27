@@ -1,6 +1,5 @@
-from pandas import DataFrame
 from database import Database
-from graph import Node, Edge, Graph
+from graph import Graph
 from results import Results
 
 
