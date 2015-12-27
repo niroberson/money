@@ -1,5 +1,5 @@
 from graph import Graph
-
+from results import Results
 
 class RecommenderFactory:
     # factory class to use analyzer, graph, query, and results class
@@ -13,6 +13,5 @@ class RecommenderFactory:
         # Get a dictionary of the shortest paths based on this node
         paths = self.graph.get_shortest_paths(concept_node)
         # Return a table sorted by shortest path lengths
-        # Results(nodes, edges, paths)
 
 

@@ -49,7 +49,9 @@ class Graph(nx.MultiDiGraph):
             # Add all attributes of Edge to network
 
     def get_node_by_name(self, name):
-        return Node(self.database.get_node_by_name(name))
+        this_node = Node(self.database.get_node_by_name(name))
+        self.update(this_node)
+        return this_node
 
     def create_subgraph_from_source(self, source_node):
 
