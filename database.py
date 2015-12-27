@@ -1,5 +1,6 @@
 from py2neo import Graph
 
+
 class Database:
     def __init__(self, dev_flag=True):
         self.user = "neo4j"
@@ -58,7 +59,10 @@ class Database:
     def get_edges_between_many_nodes(self, nodes):
         nodes_id = [node.id for node in nodes]
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a) IN " + str(nodes_id) + " AND id(b) IN " + str(nodes_id) + " RETURN r"
-        return self.execute_query(cypher_query)
+        edge_store = []
+        for edgeX in self.execute_query(cypher_query):
+            edge_store.append(edgeX.r)
+        return edge_store
 
     def get_count_direct_edges(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(r)"

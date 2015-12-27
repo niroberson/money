@@ -55,24 +55,22 @@ class Graph(nx.MultiDiGraph):
 
         # Get the sub-graph connected to this node
         nodes = self.database.get_direct_nodes(source_node)
-        all_nodes = []
         for nodeX in nodes:
             nodeX = Node(nodeX)
             # Add node to network
             self.update(node=nodeX)
             # Get direct nodes of this node
             indirect_nodes = self.database.get_direct_nodes(nodeX)
-            all_nodes.append(nodeX)
             for nodeY in indirect_nodes:
                 nodeY = Node(nodeY)
                 self.update(node=nodeY)
-                all_nodes.append(nodeY)
 
         # Get all edges between found nodes
-        edges = self.database.get_edges_between_many_nodes(all_nodes)
+        edges = self.database.get_edges_between_many_nodes(self.nodes())
 
         # Compute distances between all concept relationships
         for edgeX in edges:
+            edgeX = Edge(edgeX)
             if hasattr(edgeX.properties, 'score'):
                 edgeX.distance = edgeX.properties.score
             else:
