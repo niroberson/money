@@ -48,12 +48,13 @@ class Graph(nx.MultiDiGraph):
             self.add_edge(edge.source_node.id, edge.target_node.id, weight=edge.distance, properties=edge.properties)
             # Add all attributes of Edge to network
 
-    def create_subgraph_from_single_source(self, concept):
-        # Find the node associated with this concept
-        node_of_interest = self.database.get_node_by_name(concept)
+    def get_node_by_name(self, name):
+        return Node(self.database.get_node_by_name(name))
+
+    def create_subgraph_from_source(self, source_node):
 
         # Get the sub-graph connected to this node
-        nodes = self.database.get_direct_nodes(node_of_interest)
+        nodes = self.database.get_direct_nodes(source_node)
         all_nodes = []
         for nodeX in nodes:
             nodeX = Node(nodeX)
@@ -88,4 +89,4 @@ class Graph(nx.MultiDiGraph):
         return d
 
     def get_shortest_paths(self, source_node):
-        return nx.single_source_dijkstra_path_length(self.graph, source_node.id)
+        return nx.single_source_dijkstra_path_length(self, source_node.id)

@@ -18,7 +18,7 @@ class Database:
 
     def execute_query(self, cypher_query):
         if self.dev_flag:
-            cypher_query += " LIMIT 100"
+            cypher_query += " LIMIT 10"
         return self.connection.cypher.execute(cypher_query)
 
     def get_node_by_name(self, search_input):
@@ -57,7 +57,7 @@ class Database:
 
     def get_edges_between_many_nodes(self, nodes):
         nodes_id = [node.id for node in nodes]
-        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a) IN " + nodes_id + " AND id(b) IN " + nodes_id + " RETURN r"
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a) IN " + str(nodes_id) + " AND id(b) IN " + str(nodes_id) + " RETURN r"
         return self.execute_query(cypher_query)
 
     def get_count_direct_edges(self, node):
