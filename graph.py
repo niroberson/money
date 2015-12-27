@@ -31,20 +31,14 @@ class Graph(nx.MultiDiGraph):
         Method to update graph from given nodes and edges
         :return:
         """
-        # Create list of nodes digestible by NetworkX
-        node_list = []
+        # Add nodes into graph
         for node in nodes:
-            node_list.append(node.id)  # Add attributes of Node to network
+            self.add_node(node.id, properties=node.properties)  # Add attributes of Node to network
 
-        # Create list of edges digestible by NetworkX
-        edge_list = []
+        # Add edges into graph
         for edge in edges:
-            edge_list.append((edge.source_node.id, edge.target_node.id, edge.distance))
+            self.add_edge(edge.source_node.id, edge.target_node.id, weight=edge.distance, properties=edge.properties)
             # Add all attributes of Edge to network
-
-        # Update the networkX graph from these lists
-        self.add_nodes_from(node_list)
-        self.add_weighted_edges_from(edge_list)
 
     def get_shortest_paths(self, source_node):
         return nx.single_source_dijkstra_path_length(self.graph, source_node.id)

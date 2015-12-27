@@ -7,7 +7,7 @@ class RecommenderFactory:
     # factory class to use analyzer, graph, query, and results class
     def __init__(self, dev_flag):
         self.database = Database(dev_flag)
-        self.graph = None
+        self.graph = Graph()
 
     def search_concept(self, concept):
         # Find the node associated with this concept
@@ -32,12 +32,11 @@ class RecommenderFactory:
                 edgeX.distance = self.compute_distance(edgeX.source_node, edgeX.target_node)
 
         # Create a networkX graph based on this node
-        self.graph = Graph(nodes, edges)
+        Graph.update_graph(nodes, edges)
         # Get a dictionary of the shortest paths based on this node
         paths = self.graph.get_shortest_paths(node_of_interest)
 
         # Return a table sorted by shortest path lengths
-        print(paths)
         Results(nodes, edges, paths)
 
     def compute_distance(self, node_source, node_target):
