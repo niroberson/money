@@ -1,6 +1,7 @@
 from graph import Graph
 from results import Results
 
+
 class RecommenderFactory:
     # factory class to use analyzer, graph, query, and results class
     def __init__(self, dev_flag):
@@ -15,6 +16,6 @@ class RecommenderFactory:
         names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
         results = Results(names, paths)
         error = None
-        return results.df, error
+        return results, error
 
 

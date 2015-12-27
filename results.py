@@ -11,10 +11,10 @@ class Results:
         else:
             self.df = DataFrame([names, distances], columns=['Concept', 'distance'])
 
-    def as_table(self):
+    def to_html(self):
         # Create table from distance results
-        pass
+        return self.df.to_html()
 
-    def as_graph(self):
+    def to_graph(self):
         # Display results as graph with cytoscape or something
         pass
