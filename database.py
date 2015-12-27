@@ -56,9 +56,8 @@ class Database:
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + node1.id + " AND id(b)=" + node2.id + " RETURN r"
         return self.execute_query(cypher_query)
 
-    def get_edges_between_many_nodes(self, nodes):
-        nodes_id = [node.id for node in nodes]
-        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a) IN " + str(nodes_id) + " AND id(b) IN " + str(nodes_id) + " RETURN r"
+    def get_edges_between_many_nodes(self, node_ids):
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a) IN " + str(node_ids) + " AND id(b) IN " + str(node_ids) + " RETURN r"
         edge_store = []
         for edgeX in self.execute_query(cypher_query):
             edge_store.append(edgeX.r)
