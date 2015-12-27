@@ -1,6 +1,4 @@
 from py2neo import Graph
-from graph import Node, Edge
-
 
 class Database:
     def __init__(self, dev_flag=True):
@@ -26,35 +24,40 @@ class Database:
     def get_node_by_name(self, search_input):
         cypher_query = "MATCH (a:Concept { NAME:'" + search_input + "'}) RETURN a"
         node = self.execute_query(cypher_query)
-        return Node(node.one)
+        return node.one
 
     def get_node_by_id(self, id):
         cypher_query = "MATCH (a) WHERE id(a)=" + id + " RETURN a"
         node = self.execute_query(cypher_query)
-        return Node(node.one)
+        return node.one
 
     def get_direct_edges(self, node):
         cypher_query = "MATCH (a)-[r]-b WHERE id(a)=" + str(node.id) + " RETURN r"
-        edge_store = dict()
+        edge_store = []
         for edgeX in self.execute_query(cypher_query):
-            edgeXs = Edge(edgeX.r)
-            edge_store[edgeXs.id] = edgeXs
+            edge_store.append(edgeX.r)
         return edge_store
 
-    def get_direct_nodes(self, node, graph):
+    def get_direct_nodes(self, node):
         """
         :param node: A single node of interest for which to get all nodes directly attached to it
         :param graph: A graph storage for which to place the results of the query
         :return: Graph with query results inside of it
         """
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
+        node_store = []
         for nodeX in self.execute_query(cypher_query):
-            nodeXs = Node(nodeX.b)
-        return graph
+            node_store.append(nodeX.b)
+        return node_store
 
-    def get_edges_between_nodes(self, node1, node2):
+    def get_edges_between_two_nodes(self, node1, node2):
         # Not necessarily one edge between nodes can't take [0] need to specify rel label
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + node1.id + " AND id(b)=" + node2.id + " RETURN r"
+        return self.execute_query(cypher_query)
+
+    def get_edges_between_many_nodes(self, nodes):
+        nodes_id = [node.id for node in nodes]
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a) IN " + nodes_id + " AND id(b) IN " + nodes_id + " RETURN r"
         return self.execute_query(cypher_query)
 
     def get_count_direct_edges(self, node):
@@ -71,15 +74,3 @@ class Database:
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node1.id) + " AND id(b)=" + str(node2.id) + " RETURN count(r)"
         count = self.connection.cypher.execute(cypher_query)
         return count.one
-
-    def bfs_from_node(self, node, max_level):
-        cypher_query = "MATCH (a)-[r*1.." + max_level + "]-(b) WHERE id(a)=" + str(node.id) + " RETURN r"
-        # Create a Node object for every .b and a Edge for every .r
-        response = self.execute_query(cypher_query)
-        edge_list = []
-        node_list = []
-        for edgeX in response:
-            edge_list.append(Edge(edgeX.r1[0]))
-            node_list.append(Node(edgeX.r1[0].start_node))
-            node_list.append(Node(edgeX.r1[0].end_node))
-        return node_list, edge_list

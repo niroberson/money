@@ -1,4 +1,5 @@
 import networkx as nx
+from database import Database
 
 
 class GraphObject:
@@ -23,10 +24,17 @@ class Edge(GraphObject):
 
 class Graph(nx.MultiDiGraph):
     # Build a networkX graph from concepts and relationships
-    def __init__(self):
+    def __init__(self, dev_flag):
         nx.MultiDiGraph.__init__(self)
+        self.database = Database(dev_flag)
 
-    def update_graph(self, nodes=None, edges=None):
+    def update(self, node=None, edge=None):
+        if node:
+            self.add_node(node.id, properties=node.properties)
+        if edge:
+            self.add_edge(edge.source_node.id, edge.target_node.id, weight=edge.distance, properties=edge.properties)
+
+    def update_from(self, nodes=None, edges=None):
         """
         Method to update graph from given nodes and edges
         :return:
@@ -40,13 +48,44 @@ class Graph(nx.MultiDiGraph):
             self.add_edge(edge.source_node.id, edge.target_node.id, weight=edge.distance, properties=edge.properties)
             # Add all attributes of Edge to network
 
+    def create_subgraph_from_single_source(self, concept):
+        # Find the node associated with this concept
+        node_of_interest = self.database.get_node_by_name(concept)
+
+        # Get the sub-graph connected to this node
+        nodes = self.database.get_direct_nodes(node_of_interest)
+        all_nodes = []
+        for nodeX in nodes:
+            nodeX = Node(nodeX)
+            # Add node to network
+            self.update(node=nodeX)
+            # Get direct nodes of this node
+            indirect_nodes = self.database.get_direct_nodes(nodeX)
+            all_nodes.append(nodeX)
+            for nodeY in indirect_nodes:
+                nodeY = Node(nodeY)
+                self.update(node=nodeY)
+                all_nodes.append(nodeY)
+
+        # Get all edges between found nodes
+        edges = self.database.get_edges_between_many_nodes(all_nodes)
+
+        # Compute distances between all concept relationships
+        for edgeX in edges:
+            if hasattr(edgeX.properties, 'score'):
+                edgeX.distance = edgeX.properties.score
+            else:
+                edgeX.distance = self.compute_distance(edgeX.source_node, edgeX.target_node)
+            # Add edge to network
+            self.update(edge=edgeX)
+
+    def compute_distance(self, node_source, node_target):
+        n_i = self.database.get_count_direct_edges(node_source)
+        n_j = self.database.get_count_direct_edges(node_target)
+        n_i_j = self.database.get_count_between_nodes(node_source, node_target)
+        ksp = n_i_j/(n_i+n_j-n_i_j)
+        d = 1/ksp - 1
+        return d
+
     def get_shortest_paths(self, source_node):
         return nx.single_source_dijkstra_path_length(self.graph, source_node.id)
-
-    def get_node_from_id(self, id):
-        """
-        Get a node from the NetworkX graph by its id
-        :param id:
-        :return:
-        """
-        pass
