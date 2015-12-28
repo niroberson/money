@@ -44,7 +44,7 @@ class Database:
     def one_to_many_nodes(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query, 25):
+        for nodeX in self.execute_query(cypher_query, 10):
             node_store.append(nodeX.b)
         return node_store
 
