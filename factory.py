@@ -10,7 +10,7 @@ class RecommenderFactory:
 
     def search_concept(self, concept):
         concept_node = self.graph.get_node_by_name(concept)
-        self.graph.create_subgraph_from_source(concept_node)
+        self.graph.create_subgraph(concept_node)
 
         paths, path_lengths = self.graph.get_shortest_paths(concept_node)
         path_nodes = path_lengths.keys()

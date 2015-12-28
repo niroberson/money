@@ -11,7 +11,6 @@ class Database:
         self.connection = self.connect()
         http.socket_timeout = 9999
 
-
     def connect(self):
         if self.dev_flag:
             return self.connect_local()
@@ -52,7 +51,10 @@ class Database:
     def one_to_one_edges(self, node1, node2):
         # Not necessarily one edge between nodes can't take [0] need to specify rel label
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node1.id) + " AND id(b)=" + str(node2.id) + " RETURN r"
-        return self.execute_query(cypher_query)
+        edge_store = []
+        for edgeX in self.execute_query(cypher_query):
+            edge_store.append(edgeX.r)
+        return edge_store
 
     def one_to_many_edges(self, source, targets=None, exclude=None):
         if targets:
@@ -84,7 +86,7 @@ class Database:
     def bfs_nodes(self, source_node):
         cypher_query = "MATCH (a)-[r*0..2]-(b) WHERE id(a)=" + str(source_node.id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query):
+        for nodeX in self.execute_query(cypher_query, 20):
             node_store.append(nodeX.b)
         return node_store
 
