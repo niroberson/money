@@ -56,22 +56,15 @@ class Graph(nx.MultiDiGraph):
         self.update(this_node)
         return this_node
 
-    def create_subgraph_from_source(self, source_node):
+    def create_subgraph(self, source_node):
 
         # Get the sub-graph connected to this node
-        nodes = self.database.get_direct_nodes(source_node)
-        for nodeX in nodes:
-            nodeX = Node(nodeX)
-            # Add node to network
-            self.update(node=nodeX)
-            # Get direct nodes of this node
-            indirect_nodes = self.database.get_direct_nodes(nodeX)
-            for nodeY in indirect_nodes:
-                nodeY = Node(nodeY)
-                self.update(node=nodeY)
+        nodes = self.database.one_to_many_nodes(source_node)
+        [self.update(node=Node(nodeX)) for nodeX in nodes]
 
-        # Get all edges between found nodes
-        edges = self.database.get_edges_between_many_nodes(self.nodes())
+        # Get all indirect nodes for each direct node
+        indirect_nodes = [self.database.one_to_many_nodes(Node(nodeX)) for nodeX in nodes]
+        [self.update(node=Node(nodeY)) for nodeY in indirect_nodes]
 
         # Compute distances between all concept relationships
         for edgeX in edges:
@@ -84,9 +77,9 @@ class Graph(nx.MultiDiGraph):
             self.update(edge=edgeX)
 
     def compute_distance(self, node_source, node_target):
-        n_i = self.database.get_count_direct_edges(node_source)
-        n_j = self.database.get_count_direct_edges(node_target)
-        n_i_j = self.database.get_count_between_nodes(node_source, node_target)
+        n_i = self.database.count_one_to_many_edges(node_source)
+        n_j = self.database.count_one_to_many_edges(node_target)
+        n_i_j = self.database.count_one_to_one_edges(node_source, node_target)
         ksp = n_i_j/(n_i+n_j-n_i_j)
         d = 1/ksp - 1
         return d

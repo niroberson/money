@@ -42,48 +42,60 @@ class Database:
         node = self.execute_query(cypher_query)
         return node.one
 
-    def get_direct_edges(self, node):
-        cypher_query = "MATCH (a)-[r]-b WHERE id(a)=" + str(node.id) + " RETURN r"
+    def one_to_many_nodes_no_overlap(self, node1, node2):
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node1.id) + " AND NOT id(b)=" + str(node2.id) + " RETURN r"
         edge_store = []
         for edgeX in self.execute_query(cypher_query):
             edge_store.append(edgeX.r)
         return edge_store
 
-    def get_direct_nodes(self, node):
-        """
-        :param node: A single node of interest for which to get all nodes directly attached to it
-        :param graph: A graph storage for which to place the results of the query
-        :return: Graph with query results inside of it
-        """
+    def one_to_many_nodes(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
         node_store = []
         for nodeX in self.execute_query(cypher_query, 5):
             node_store.append(nodeX.b)
         return node_store
 
-    def get_edges_between_two_nodes(self, node1, node2):
-        # Not necessarily one edge between nodes can't take [0] need to specify rel label
-        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + node1.id + " AND id(b)=" + node2.id + " RETURN r"
-        return self.execute_query(cypher_query)
+    def bfs_nodes(self, source_node):
+        cypher_query = "MATCH (a)-[r*0..2]-(b) WHERE id(a)=" + str(source_node.id) + " RETURN b"
+        node_store = []
+        for nodeX in self.execute_query(cypher_query):
+            node_store.append(nodeX.b)
+        return node_store
 
-    def get_edges_between_many_nodes(self, node_ids):
-        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a) IN " + str(node_ids) + " AND id(b) IN " + str(node_ids) + " RETURN r"
+    def bfs_edges(self, source_node):
+        cypher_query = "MATCH (a)-[r*0..2]-(b) WHERE id(a)=" + source_node.id + " RETURN r"
         edge_store = []
         for edgeX in self.execute_query(cypher_query):
             edge_store.append(edgeX.r)
         return edge_store
 
-    def get_count_direct_edges(self, node):
+    def one_to_one_edges(self, node1, node2):
+        # Not necessarily one edge between nodes can't take [0] need to specify rel label
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node1.id) + " AND id(b)=" + str(node2.id) + " RETURN r"
+        return self.execute_query(cypher_query)
+
+    def one_to_many_edges(self, source, targets=None):
+        if targets:
+            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a) IN " + str(source.id) + " AND id(b) IN " + str(targets) + " RETURN r"
+        else:
+            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(source.id) + " RETURN r"
+        edge_store = []
+        for edgeX in self.execute_query(cypher_query):
+            edge_store.append(edgeX.r)
+        return edge_store
+
+    def count_one_to_many_edges(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(r)"
         count = self.execute_query(cypher_query)
         return count.one
 
-    def get_count_direct_nodes(self, node):
+    def count_one_to_many_nodes(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(b)"
         count = self.execute_query(cypher_query)
         return count.one
 
-    def get_count_between_nodes(self, node1, node2):
+    def count_one_to_one_edges(self, node1, node2):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node1.id) + " AND id(b)=" + str(node2.id) + " RETURN count(r)"
         count = self.execute_query(cypher_query)
         return count.one
