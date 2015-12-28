@@ -4,13 +4,19 @@ from database import Database
 
 class GraphObject:
     def __init__(self, obj):
-        self.id = obj._id
-        self.properties = obj.properties
+        if hasattr(obj, '_id'):
+            self.id = obj._id
+        if hasattr(obj, 'properties'):
+            self.properties = obj.properties
 
 
 class Node(GraphObject):
-    def __init__(self, node):
+    def __init__(self, node=None, id=None, prop=None):
         GraphObject.__init__(self, node)
+        if id:
+            self.id = id
+        if prop:
+            self.properties = prop
 
 
 class Edge(GraphObject):
@@ -56,6 +62,11 @@ class Graph(nx.MultiDiGraph):
         self.update(this_node)
         return this_node
 
+    def get_local_node_by_id(self, id):
+        node = self.node[id]
+        node['id'] = id
+        return Node(id=id, prop=node['properties'])
+
     def load_graph_from_source(self, source):
         # Get directly associated nodes
         nodes = self.database.one_to_many_nodes(source)
@@ -63,10 +74,11 @@ class Graph(nx.MultiDiGraph):
         [self.update(node=nodeX) for nodeX in nodes]
 
         # Get these edges
-        edges = self.database.one_to_many_edges(source, nodes)
+        node_ids = [nodeX.id for nodeX in nodes]
+        edges = self.database.one_to_many_edges(source, node_ids)
         edges = [Edge(edgeX) for edgeX in edges]
         edges = self.compute_distances(edges)
-        [self.update(edge=Edge(edgeX)) for edgeX in edges]
+        [self.update(edge=edgeX) for edgeX in edges]
 
     def create_subgraph(self, source_node):
 
@@ -79,6 +91,7 @@ class Graph(nx.MultiDiGraph):
 
         # For each node now in the graph, do the same thing
         current_nodes = self.nodes()
+        current_nodes = [self.get_local_node_by_id(nodeX_id) for nodeX_id in current_nodes]
         [self.load_graph_from_source(nodeX) for nodeX in current_nodes]
 
     def compute_distances(self, edges):
