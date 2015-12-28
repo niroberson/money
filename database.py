@@ -44,7 +44,7 @@ class Database:
     def one_to_many_nodes(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query, 5):
+        for nodeX in self.execute_query(cypher_query, 25):
             node_store.append(nodeX.b)
         return node_store
 
@@ -58,7 +58,7 @@ class Database:
 
     def one_to_many_edges(self, source, targets=None, exclude=None):
         if targets:
-            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a) IN " + str(source.id) + " AND id(b) IN " + str(targets) + " RETURN r"
+            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(source.id) + " AND id(b) IN " + str(targets) + " RETURN r"
         elif exclude:
             cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(source.id) + " AND NOT id(b)=" + str(exclude.id) + " RETURN r"
         else:

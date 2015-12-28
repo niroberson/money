@@ -56,6 +56,18 @@ class Graph(nx.MultiDiGraph):
         self.update(this_node)
         return this_node
 
+    def load_graph_from_source(self, source):
+        # Get directly associated nodes
+        nodes = self.database.one_to_many_nodes(source)
+        nodes = [Node(nodeX) for nodeX in nodes]
+        [self.update(node=nodeX) for nodeX in nodes]
+
+        # Get these edges
+        edges = self.database.one_to_many_edges(source, nodes)
+        edges = [Edge(edgeX) for edgeX in edges]
+        edges = self.compute_distances(edges)
+        [self.update(edge=Edge(edgeX)) for edgeX in edges]
+
     def create_subgraph(self, source_node):
 
         # nodes = self.database.bfs_nodes(source_node)
@@ -63,23 +75,18 @@ class Graph(nx.MultiDiGraph):
         # [self.update(node=nodeX) for nodeX in nodes]
 
         # Get the sub-graph connected to this node
-        nodes = self.database.one_to_many_nodes(source_node)
-        nodes = [Node(nodeX) for nodeX in nodes]
-        [self.update(node=nodeX) for nodeX in nodes]
+        self.load_graph_from_source(source_node)
 
-        # Get all indirect nodes for each direct node
-        for nodeX in nodes:
-            nodesX = [self.database.one_to_many_nodes(nodeX)]
-            nodesX = [Node(nodeY) for nodeY in nodesX]
-            [self.update(node=nodeY) for nodeY in nodesX]
+        # For each node now in the graph, do the same thing
+        current_nodes = self.nodes()
+        [self.load_graph_from_source(nodeX) for nodeX in current_nodes]
 
-            # Compute distances between all concept relationships
-            edges = [self.database.one_to_one_edges(nodeX, nodeY) for nodeY in nodes]
-            for edgeX in edges:
-                for edgeY in edgeX:
-                    edgeY = Edge(edgeY)
-                    edgeY.distance = self.compute_distance(edgeY.source_node, edgeY.target_node)
-                    self.update(edge=edgeY)
+    def compute_distances(self, edges):
+        results = []
+        for edge in edges:
+            edge.distance = self.compute_distance(edge.source_node, edge.target_node)
+            results.append(edge)
+        return results
 
     def compute_distance(self, node_source, node_target):
         n_i = self.database.count_one_to_many_edges(node_source)
