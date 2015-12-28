@@ -2,14 +2,14 @@ from pandas import DataFrame
 
 
 class Results:
-    def __init__(self, names, paths):
+    def __init__(self, graph, paths):
+        path_nodes = paths.keys()
+        names = [graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
         # Get a dictionary of the shortest paths based on this node
         distances = list(paths.values())
         # Return a table sorted by shortest path lengths
-        if len(names) == 1:
-            self.df = DataFrame([[names[0], distances[0]]], columns=['Concept', 'distance'])
-        else:
-            self.df = DataFrame([names, distances], columns=['Concept', 'distance'])
+        data = {'Concept': names, 'Distances': distances}
+        self.df = DataFrame(data)
 
     def to_html(self):
         # Create table from distance results

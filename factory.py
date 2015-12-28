@@ -12,9 +12,7 @@ class RecommenderFactory:
         self.graph.create_subgraph_from_source(concept_node)
 
         paths = self.graph.get_shortest_paths(concept_node)
-        path_nodes = paths.keys()
-        names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
-        results = Results(names, paths)
+        results = Results(self.graph, paths)
         error = None
         return results, error
 

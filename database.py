@@ -57,7 +57,7 @@ class Database:
         """
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query, 10):
+        for nodeX in self.execute_query(cypher_query, 5):
             node_store.append(nodeX.b)
         return node_store
 
