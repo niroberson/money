@@ -1,5 +1,5 @@
 from flask import Flask, request, session, g ,redirect, url_for, \
-    abort, render_template
+    abort, render_template, send_from_directory
 
 from factory import RecommenderFactory
 
@@ -35,6 +35,7 @@ def submit_query():
 
 @app.route('/graph', methods=['GET'])
 def graph_viz():
+    send_from_directory('static', filename='graph.json')
     return render_template('graph.html')
 
 

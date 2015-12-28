@@ -41,3 +41,6 @@ class Results:
         d = json_graph.node_link_data(self.graph) # node-link format to serialize
         # write json
         json.dump(d, open('graph.json', 'w'))
+
+    def to_graph_gexf(self):
+        nx.write_gexf(self.graph, "graph.gexf")
