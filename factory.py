@@ -1,6 +1,5 @@
 from graph import Graph
 from results import Results
-from pandas import DataFrame
 
 
 class RecommenderFactory:
@@ -18,7 +17,7 @@ class RecommenderFactory:
         # Find the shortest paths in this subgraph
         paths, path_lengths = self.graph.get_shortest_paths(concept_node)
 
-        # Create results
+        # Create results in dataframe
         path_nodes = path_lengths.keys()
         names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
         path_names = [paths[nodeX] for nodeX in path_nodes]
