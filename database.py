@@ -1,4 +1,5 @@
 from py2neo import Graph
+from py2neo.packages.httpstream import http
 
 
 class Database:
@@ -6,8 +7,17 @@ class Database:
         self.user = "neo4j"
         self.password = "newk1ng$!"
         self.host_local = "localhost:7474/db/data"
-        self.connection = self.connect_local()
         self.dev_flag = dev_flag
+        self.connection = self.connect()
+        http.socket_timeout = 9999
+
+
+    def connect(self):
+        if self.dev_flag:
+            return self.connect_local()
+        else:
+            return self.connect_local()
+            # TODO: return self.connect_production()
 
     def connect_local(self):
         endpoint = Database.create_endpoint(self.host_local, self.user, self.password)
@@ -17,9 +27,9 @@ class Database:
     def create_endpoint(host, user, password):
         return "http://" + user + ":" + password + "@" + host
 
-    def execute_query(self, cypher_query):
-        if self.dev_flag:
-            cypher_query += " LIMIT 10"
+    def execute_query(self, cypher_query, limit=None):
+        if self.dev_flag and limit:
+            cypher_query += " LIMIT " + str(limit)
         return self.connection.cypher.execute(cypher_query)
 
     def get_node_by_name(self, search_input):
@@ -47,7 +57,7 @@ class Database:
         """
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query):
+        for nodeX in self.execute_query(cypher_query, 10):
             node_store.append(nodeX.b)
         return node_store
 
@@ -65,15 +75,15 @@ class Database:
 
     def get_count_direct_edges(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(r)"
-        count = self.connection.cypher.execute(cypher_query)
+        count = self.execute_query(cypher_query)
         return count.one
 
     def get_count_direct_nodes(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(b)"
-        count = self.connection.cypher.execute(cypher_query)
+        count = self.execute_query(cypher_query)
         return count.one
 
     def get_count_between_nodes(self, node1, node2):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node1.id) + " AND id(b)=" + str(node2.id) + " RETURN count(r)"
-        count = self.connection.cypher.execute(cypher_query)
+        count = self.execute_query(cypher_query)
         return count.one
