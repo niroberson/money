@@ -58,23 +58,29 @@ class Graph(nx.MultiDiGraph):
 
     def create_subgraph(self, source_node):
 
-        # Get the sub-graph connected to this node
-        nodes = self.database.one_to_many_nodes(source_node)
-        [self.update(node=Node(nodeX)) for nodeX in nodes]
+        # # Get the sub-graph connected to this node
+        # nodes = self.database.one_to_many_nodes(source_node)
+        # [self.update(node=Node(nodeX)) for nodeX in nodes]
+        #
+        # # Get all indirect nodes for each direct node
+        # indirect_nodes = [self.database.one_to_many_nodes(Node(nodeX)) for nodeX in nodes]
+        # [self.update(node=Node(nodeY)) for nodeY in indirect_nodes]
 
-        # Get all indirect nodes for each direct node
-        indirect_nodes = [self.database.one_to_many_nodes(Node(nodeX)) for nodeX in nodes]
-        [self.update(node=Node(nodeY)) for nodeY in indirect_nodes]
+        nodes = self.database.bfs_nodes(source_node)
+        nodes = [Node(nodeX) for nodeX in nodes]
+        [self.update(node=nodeX) for nodeX in nodes]
 
         # Compute distances between all concept relationships
-        for edgeX in edges:
-            edgeX = Edge(edgeX)
-            if hasattr(edgeX.properties, 'score'):
-                edgeX.distance = edgeX.properties.score
-            else:
-                edgeX.distance = self.compute_distance(edgeX.source_node, edgeX.target_node)
-            # Add edge to network
-            self.update(edge=edgeX)
+        for nodeX in nodes:
+            edges = [Edge(self.database.one_to_one_edges(nodeX, nodeY)) for nodeY in nodes]
+            for edgeX in edges:
+                for edgeY in edgeX:
+                    if hasattr(edgeY.properties, 'score'):
+                        edgeY.distance = edgeY.properties.score
+                    else:
+                        edgeY.distance = self.compute_distance(edgeY.source_node, edgeY.target_node)
+                    # Add edge to network
+                    self.update(edge=edgeY)
 
     def compute_distance(self, node_source, node_target):
         n_i = self.database.count_one_to_many_edges(node_source)
