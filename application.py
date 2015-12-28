@@ -1,5 +1,5 @@
 from flask import Flask, request, session, g ,redirect, url_for, \
-    abort, render_template, flash
+    abort, render_template
 
 from factory import RecommenderFactory
 
@@ -29,9 +29,13 @@ def submit_query():
             return render_template('query.html', keyword=keyword, error=error)
         else:
             table = results.to_html()
-            results.to_graph_json()
             return render_template('query.html', keyword=keyword, results=table)
     return render_template('query.html')
+
+
+@app.route('/graph', methods=['GET'])
+def graph_viz():
+    return render_template('graph.html')
 
 
 if __name__ == "__main__":

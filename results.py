@@ -16,18 +16,19 @@ class Results:
         # Find the shortest paths in this subgraph
         paths, path_lengths = self.graph.get_shortest_paths(concept_node)
 
-        # Create results in dataframe
+        # Create results in data frame
         path_nodes = path_lengths.keys()
         names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
         path_names = [paths[nodeX] for nodeX in path_nodes]
         paths_lengths_l = [path_lengths[nodeX] for nodeX in path_nodes]
         data = {'Concept': names,
-                'Distance': paths_lengths_l, 'Path': path_names}
+                'Distance': paths_lengths_l,
+                'Path': path_names}
         table = DataFrame(data, index=path_nodes)
         self.table = table.sort('Distance')
 
     def to_html(self):
-        return self.df.to_html()
+        return self.table.to_html()
 
     def to_graph(self):
         pos = nx.random_layout(self.graph)
