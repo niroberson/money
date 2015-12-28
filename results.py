@@ -4,25 +4,39 @@ import json
 import networkx as nx
 from networkx.readwrite import json_graph
 
+
 class Results:
-    def __init__(self, path_nodes, names, path_lengths, path_names):
+    def __init__(self, graph, concept_node):
+        self.graph = graph
+        self.table = None
+        self.create_table(concept_node)
+
+    def create_table(self, concept_node):
+        # Create table from distance results
+        # Find the shortest paths in this subgraph
+        paths, path_lengths = self.graph.get_shortest_paths(concept_node)
+
+        # Create results in dataframe
+        path_nodes = path_lengths.keys()
+        names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
+        path_names = [paths[nodeX] for nodeX in path_nodes]
+        paths_lengths_l = [path_lengths[nodeX] for nodeX in path_nodes]
         data = {'Concept': names,
-                'Distance': path_lengths, 'Path': path_names}
-        df = DataFrame(data, index=path_nodes)
-        self.df = df.sort('Distance')
+                'Distance': paths_lengths_l, 'Path': path_names}
+        table = DataFrame(data, index=path_nodes)
+        self.table = table.sort('Distance')
 
     def to_html(self):
-        # Create table from distance results
         return self.df.to_html()
 
-    def to_graph(self, graph):
-        pos = nx.random_layout(graph)
-        node_labels = {nodeX:graph.node[nodeX]['properties']['NAME'] for nodeX in graph.nodes()}
-        nx.draw_networkx_labels(graph, pos, labels=node_labels)
-        nx.draw_networkx_nodes(graph, pos, node_size=700, node_shape='d')
+    def to_graph(self):
+        pos = nx.random_layout(self.graph)
+        node_labels = {nodeX:self.graph.node[nodeX]['properties']['NAME'] for nodeX in graph.nodes()}
+        nx.draw_networkx_labels(self.graph, pos, labels=node_labels)
+        nx.draw_networkx_nodes(self.graph, pos, node_size=700, node_shape='d')
         pylab.show()
 
-    def to_graph_json(self, graph):
-        d = json_graph.node_link_data(graph) # node-link format to serialize
+    def to_graph_json(self):
+        d = json_graph.node_link_data(self.graph) # node-link format to serialize
         # write json
         json.dump(d, open('graph.json', 'w'))

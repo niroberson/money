@@ -11,18 +11,11 @@ class RecommenderFactory:
         # Get the node for this concept
         concept_node = self.graph.get_node_by_name(concept)
 
-        # Create the subgraph around this concept node
+        # Create the sub-graph around this concept node
         self.graph.create_subgraph(concept_node)
 
-        # Find the shortest paths in this subgraph
-        paths, path_lengths = self.graph.get_shortest_paths(concept_node)
-
-        # Create results in dataframe
-        path_nodes = path_lengths.keys()
-        names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
-        path_names = [paths[nodeX] for nodeX in path_nodes]
-        paths_lengths_l = [path_lengths[nodeX] for nodeX in path_nodes]
-        results = Results(path_nodes, names, paths_lengths_l, path_names)
+        # Get the results
+        results = Results(self.graph, concept_node)
 
         error = None
         return results, error
