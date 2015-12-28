@@ -92,4 +92,6 @@ class Graph(nx.MultiDiGraph):
         return d
 
     def get_shortest_paths(self, source_node):
-        return nx.single_source_dijkstra_path_length(self, source_node.id)
+        paths = nx.single_source_dijkstra_path(self, source_node.id)
+        path_lengths = nx.single_source_dijkstra_path_length(self, source_node.id)
+        return paths, path_lengths

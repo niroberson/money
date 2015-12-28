@@ -1,5 +1,6 @@
 from graph import Graph
 from results import Results
+from pandas import DataFrame
 
 
 class RecommenderFactory:
@@ -11,8 +12,15 @@ class RecommenderFactory:
         concept_node = self.graph.get_node_by_name(concept)
         self.graph.create_subgraph_from_source(concept_node)
 
-        paths = self.graph.get_shortest_paths(concept_node)
-        results = Results(self.graph, paths)
+        paths, path_lengths = self.graph.get_shortest_paths(concept_node)
+        path_nodes = path_lengths.keys()
+        names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
+        # Return a table sorted by shortest path lengths
+        data = {'Concept': names,
+                'Distance': list(path_lengths.values()), 'Path': list(paths.values())}
+        df = DataFrame(data, index=path_nodes)
+        df = df.sort('Distance')
+        results = Results(df)
         error = None
         return results, error
 
