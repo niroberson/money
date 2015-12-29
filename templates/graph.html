@@ -1,11 +1,20 @@
 <!doctype html>
+<head>
+<style type="text/css">
+  #container {
+    max-width: 400px;
+    height: 400px;
+    margin: auto;
+  }
+</style>
+</head>
 <div id="container"></div>
 <script src="{{ url_for('static', filename='sigma.min.js')}}"></script>
 <script src="{{ url_for('static', filename='sigma.parsers.json.min.js')}}"></script>
 <script src="{{ url_for('static', filename='sigma.parsers.gexf.min.js')}}"></script>
 
 <script>
-  sigma.parsers.gexf('/static/graph.gexf', {
+  sigma.parsers.json('/static/graph-test.json', {
     container: 'container',
     settings: {
       defaultNodeColor: '#ec5148'

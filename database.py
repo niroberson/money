@@ -5,7 +5,7 @@ from py2neo.packages.httpstream import http
 class Database:
     def __init__(self, dev_flag=True):
         self.user = "neo4j"
-        self.password = "newk1ng$!"
+        self.password = "lalala"
         self.host_local = "localhost:7474/db/data"
         self.dev_flag = dev_flag
         self.connection = self.connect()
