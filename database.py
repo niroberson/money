@@ -3,10 +3,8 @@ from py2neo.packages.httpstream import http
 
 
 class Database:
-    def __init__(self, dev_flag=True):
-        self.user = "neo4j"
-        self.password = "newk1ng$!"
-        self.host_local = "localhost:7474/db/data"
+    def __init__(self, config, dev_flag=True):
+        self.config = config
         self.dev_flag = dev_flag
         self.connection = self.connect()
         http.socket_timeout = 9999
@@ -19,7 +17,7 @@ class Database:
             # TODO: return self.connect_production()
 
     def connect_local(self):
-        endpoint = Database.create_endpoint(self.host_local, self.user, self.password)
+        endpoint = Database.create_endpoint(self.config.host_local, self.config.user, self.config.password)
         return Graph(endpoint)
 
     @staticmethod

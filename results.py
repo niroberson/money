@@ -6,7 +6,8 @@ from networkx.readwrite import json_graph
 import os
 
 class Results:
-    def __init__(self, graph, concept_node):
+    def __init__(self, config, graph, concept_node):
+        self.config = config
         self.graph = graph
         self.table = None
         self.create_table(concept_node)
@@ -39,10 +40,9 @@ class Results:
 
     def to_graph_json(self):
         attr = dict(id='ids', source='source', target='target', key='key')
-        d = json_graph.node_link_data(self.graph, attr) # node-link format to serialize
-        # write json
-        gpath = os.path.join(os.path.abspath('graph.py'), 'static', 'graph.json')
-        json.dump(d, open(gpath, 'w'))
+        d = json_graph.node_link_data(self.graph, attr)
+        temp_path = os.path.join(self.config.data_dir, '/graph.json')
+        json.dump(d, open(temp_path, 'w'))
 
     def to_graph_gexf(self):
         nx.write_gexf(self.graph, "graph.gexf")
