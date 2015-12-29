@@ -32,9 +32,9 @@ class Results:
 
     def to_graph(self):
         pos = nx.random_layout(self.graph)
-        node_labels = {nodeX:self.graph.node[nodeX]['properties']['NAME'] for nodeX in graph.nodes()}
+        node_labels = {nodeX:self.graph.node[nodeX]['properties']['NAME'] for nodeX in self.graph.nodes()}
         nx.draw_networkx_labels(self.graph, pos, labels=node_labels)
-        nx.draw_networkx_nodes(self.graph, pos, node_size=700, node_shape='d')
+        nx.draw_networkx_nodes(self.graph, pos, node_size=700, node_shape='o')
         pylab.show()
 
     def to_graph_json(self):
