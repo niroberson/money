@@ -35,7 +35,7 @@ def submit_query():
 
 @app.route('/graph', methods=['GET'])
 def graph_viz():
-    send_from_directory('static', filename='graph-test.json')
+    send_from_directory('static', filename='graph.json')
     return render_template('graph.html')
 
 

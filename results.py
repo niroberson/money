@@ -39,9 +39,9 @@ class Results:
         pylab.show()
 
     def to_graph_json(self):
-        attr = dict(id='ids', source='source', target='target', key='key')
+        attr = dict(id='ids', source='source', target='target')
         d = json_graph.node_link_data(self.graph, attr)
-        temp_path = os.path.join(self.config.data_dir, '/graph.json')
+        temp_path = os.path.join(self.config.data_dir, 'graph.json')
         json.dump(d, open(temp_path, 'w'))
 
     def to_graph_gexf(self):

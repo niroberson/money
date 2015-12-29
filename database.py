@@ -17,7 +17,7 @@ class Database:
             # TODO: return self.connect_production()
 
     def connect_local(self):
-        endpoint = Database.create_endpoint(self.config.host_local, self.config.user, self.config.password)
+        endpoint = Database.create_endpoint(self.config.host_local, self.config.user, self.config.pw)
         return Graph(endpoint)
 
     @staticmethod

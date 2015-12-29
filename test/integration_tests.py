@@ -1,5 +1,4 @@
 from factory import RecommenderFactory
-import os
 from config import Config
 
 if __name__ == "__main__":

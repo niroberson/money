@@ -34,7 +34,7 @@ class Graph(nx.MultiDiGraph):
     # Build a networkX graph from concepts and relationships
     def __init__(self, config, dev_flag):
         nx.MultiDiGraph.__init__(self)
-        self.database = Database(dev_flag, config)
+        self.database = Database(config, dev_flag)
 
     def update(self, node=None, edge=None):
         if node:
