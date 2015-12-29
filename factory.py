@@ -4,8 +4,9 @@ from results import Results
 
 class RecommenderFactory:
     # factory class to use analyzer, graph, query, and results class
-    def __init__(self, dev_flag):
+    def __init__(self, dev_flag, config=None):
         self.graph = Graph(dev_flag)
+        self.config = config
 
     def search_concept(self, concept):
         # Get the node for this concept

@@ -3,7 +3,7 @@ import pylab
 import json
 import networkx as nx
 from networkx.readwrite import json_graph
-
+import os
 
 class Results:
     def __init__(self, graph, concept_node):
@@ -38,9 +38,11 @@ class Results:
         pylab.show()
 
     def to_graph_json(self):
-        d = json_graph.node_link_data(self.graph) # node-link format to serialize
+        attr = dict(id='ids', source='source', target='target', key='key')
+        d = json_graph.node_link_data(self.graph, attr) # node-link format to serialize
         # write json
-        json.dump(d, open('graph.json', 'w'))
+        gpath = os.path.join(os.path.abspath('graph.py'), 'static', 'graph.json')
+        json.dump(d, open(gpath, 'w'))
 
     def to_graph_gexf(self):
         nx.write_gexf(self.graph, "graph.gexf")

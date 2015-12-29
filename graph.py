@@ -6,6 +6,7 @@ class GraphObject:
     def __init__(self, obj):
         if hasattr(obj, '_id'):
             self.id = obj._id
+            self.ids = str(obj._id)
         if hasattr(obj, 'properties'):
             self.properties = obj.properties
 
@@ -15,6 +16,7 @@ class Node(GraphObject):
         GraphObject.__init__(self, node)
         if id:
             self.id = id
+            self.ids = str(id)
         if prop:
             self.properties = prop
 
@@ -102,6 +104,7 @@ class Graph(nx.MultiDiGraph):
         return results
 
     def compute_distance(self, node_source, node_target):
+        # TODO: Add count of relationship not just number of relationships here
         n_i = self.database.count_one_to_many_edges(node_source)
         n_j = self.database.count_one_to_many_edges(node_target)
         n_i_j = self.database.count_one_to_one_edges(node_source, node_target)
