@@ -36,10 +36,11 @@ class Results:
         node_labels = {nodeX:self.graph.node[nodeX]['properties']['NAME'] for nodeX in self.graph.nodes()}
         nx.draw_networkx_labels(self.graph, pos, labels=node_labels)
         nx.draw_networkx_nodes(self.graph, pos, node_size=700, node_shape='o')
+        nx.draw(self.graph, pos)
         pylab.show()
 
     def to_graph_json(self):
-        attr = dict(id='ids', source='source', target='target')
+        attr = dict(id='id', source='source', target='target', key='key')
         d = json_graph.node_link_data(self.graph, attr)
         temp_path = os.path.join(self.config.data_dir, 'graph.json')
         json.dump(d, open(temp_path, 'w'))

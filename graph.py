@@ -38,7 +38,7 @@ class Graph(nx.MultiDiGraph):
 
     def update(self, node=None, edge=None):
         if node:
-            self.add_node(node.id, properties=node.properties)
+            self.add_node(node.id, properties=node.properties, ids=node.ids)
             print('Added %s to graph network\n' % (node.properties['NAME']))
         if edge:
             self.add_edge(edge.source_node.id, edge.target_node.id, weight=edge.distance, properties=edge.properties)
@@ -52,7 +52,7 @@ class Graph(nx.MultiDiGraph):
         """
         # Add nodes into graph
         for node in nodes:
-            self.add_node(node.id, properties=node.properties)  # Add attributes of Node to network
+            self.add_node(node.id, properties=node.properties, ids=node.ids)  # Add attributes of Node to network
 
         # Add edges into graph
         for edge in edges:
