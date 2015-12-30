@@ -56,7 +56,6 @@ class Graph(nx.MultiDiGraph):
 
     def set_weight(self, edge):
         self.database.set_weight(edge)
-        print("Set weight in database as %f" % (edge.distance))
 
     def update_from(self, nodes=None, edges=None):
         """
@@ -144,3 +143,5 @@ class Graph(nx.MultiDiGraph):
             if edge.distance is None:
                 edge.distance = self.compute_distance(edge)
                 self.set_weight(edge)
+                print('Set Edge: %s:%s:%s Weight:%f' % (edge.source_node.properties['NAME'], edge.type,
+                      edge.target_node.properties['NAME'], edge.distance))
