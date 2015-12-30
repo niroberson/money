@@ -22,7 +22,6 @@ class RecommenderFactory:
         return results, error
 
     def create_distance_graph(self):
-        seed = 3
-        nodes = self.graph.create_subgraph()
-        return nodes
+        self.graph.traverse()
+
 

@@ -40,11 +40,14 @@ class Database:
         return node.one
 
     def get_all_node_ids(self):
-        cypher_query = "MATCH (a:Concept) RETURN id(a)"
-        return self.execute_query(cypher_query)
+        cypher_query = "MATCH (a) RETURN id(a)"
+        return self.execute_query(cypher_query, 100)
 
-    def one_to_many_nodes(self, node):
-        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
+    def one_to_many_nodes(self, node=None, id=None):
+        if node:
+            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN b"
+        elif id:
+            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(id) + " RETURN b"
         node_store = []
         for nodeX in self.execute_query(cypher_query, 10):
             node_store.append(nodeX.b)

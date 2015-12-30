@@ -52,8 +52,11 @@ class Graph(nx.MultiDiGraph):
             print('Added edge: %s:%s:%s to graph network' % (edge.source_node.properties['NAME'], edge.type,
                                                                      edge.target_node.properties['NAME']))
             if self.dev_flag and edge.update:
-                self.database.set_weight(edge)
-                print("Set weight in database as %f" % (edge.distance))
+                self.set_weight(edge)
+
+    def set_weight(self, edge):
+        self.database.set_weight(edge)
+        print("Set weight in database as %f" % (edge.distance))
 
     def update_from(self, nodes=None, edges=None):
         """
@@ -131,3 +134,12 @@ class Graph(nx.MultiDiGraph):
         paths = nx.single_source_dijkstra_path(self, source_node.id)
         path_lengths = nx.single_source_dijkstra_path_length(self, source_node.id)
         return paths, path_lengths
+
+    def traverse(self):
+        node_ids = self.database.get_all_node_ids()
+        for node in node_ids:
+            nid = node[0]
+            edges = self.database.one_to_many_edges(id=nid)
+            edges = [Edge(edgeX) for edgeX in edges]
+            edges = self.compute_distances(edges)
+            [self.set_weight(edgeX) for edgeX in edges]
