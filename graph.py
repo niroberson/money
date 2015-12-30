@@ -29,9 +29,11 @@ class Edge(GraphObject):
         self.target_node = Node(relationship.end_node)
         if 'weight' in relationship:
             self.distance = relationship['weight']
+            self.update = False
             print('Got weight from database as: %f' % (self.distance) )
         else:
             self.distance = None
+            self.update = True
 
 
 class Graph(nx.MultiDiGraph):
@@ -49,7 +51,7 @@ class Graph(nx.MultiDiGraph):
             self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance, properties=edge.properties)
             print('Added edge: %s:%s:%s to graph network' % (edge.source_node.properties['NAME'], edge.type,
                                                                      edge.target_node.properties['NAME']))
-            if self.dev_flag:
+            if self.dev_flag and edge.update:
                 self.database.set_weight(edge)
                 print("Set weight in database as %f" % (edge.distance))
 
