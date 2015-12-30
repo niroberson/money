@@ -5,6 +5,7 @@ import networkx as nx
 from networkx.readwrite import json_graph
 import os
 
+
 class Results:
     def __init__(self, config, graph, concept_node):
         self.config = config

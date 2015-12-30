@@ -21,4 +21,7 @@ class RecommenderFactory:
         error = None
         return results, error
 
+    def create_distance_graph(self):
+        nodes = self.graph.database.get_all_node_ids()
+        return nodes
 
