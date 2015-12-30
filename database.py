@@ -106,3 +106,7 @@ class Database:
         for edgeX in self.execute_query(cypher_query, 100):
             edge_store.append(edgeX.r)
         return edge_store
+
+    def set_weight(self, edge):
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(r)=" + str(edge.id) + " SET r.weight=" + str(edge.distance) + " RETURN r"
+        return self.execute_query(cypher_query)

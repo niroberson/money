@@ -27,7 +27,11 @@ class Edge(GraphObject):
         self.type = relationship.type
         self.source_node = Node(relationship.start_node)
         self.target_node = Node(relationship.end_node)
-        self.distance = None
+        if 'weight' in relationship:
+            self.distance = relationship['weight']
+            print('Got weight from database as: %f' % (self.distance) )
+        else:
+            self.distance = None
 
 
 class Graph(nx.MultiDiGraph):
@@ -35,15 +39,19 @@ class Graph(nx.MultiDiGraph):
     def __init__(self, config, dev_flag):
         nx.MultiDiGraph.__init__(self)
         self.database = Database(config, dev_flag)
+        self.dev_flag = dev_flag
 
     def update(self, node=None, edge=None):
         if node:
             self.add_node(node.id, properties=node.properties, ids=node.ids)
-            print('Added: %s \n' % (node.properties['NAME']))
+            print('Added: %s' % (node.properties['NAME']))
         if edge:
             self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance, properties=edge.properties)
-            print('Added edge: %s:%s:%s to graph network\n' % (edge.source_node.properties['NAME'], edge.type,
+            print('Added edge: %s:%s:%s to graph network' % (edge.source_node.properties['NAME'], edge.type,
                                                                      edge.target_node.properties['NAME']))
+            if self.dev_flag:
+                self.database.set_weight(edge)
+                print("Set weight in database as %f" % (edge.distance))
 
     def update_from(self, nodes=None, edges=None):
         """
@@ -82,15 +90,6 @@ class Graph(nx.MultiDiGraph):
         edges = self.compute_distances(edges)
         [self.update(edge=edgeX) for edgeX in edges]
 
-    def load_graph_edges(self):
-        node_ids = self.nodes()
-        # Load edges for all nodes
-        for node in node_ids:
-            this_edges = self.database.one_to_many_edges(id=node, targets=node_ids)
-            this_edges = [Edge(edgeX) for edgeX in this_edges]
-            this_edges = self.compute_distances(this_edges)
-            [self.update(edge=edgeX) for edgeX in this_edges]
-
     def load_edges_from_graph(self, source_node):
         edges = self.database.bfs_edges(source_node)
         for edgeX in edges:
@@ -99,9 +98,9 @@ class Graph(nx.MultiDiGraph):
                 edgeY = Edge(edgeY)
                 if self.has_edge(edgeY.source_node.id, edgeY.target_node.id, key=edgeY.id):
                     continue
-                else:
+                elif edgeY.distance is None:
                     edgeY.distance = self.compute_distance(edgeY)
-                    self.update(edge=edgeY)
+                self.update(edge=edgeY)
 
     def create_subgraph(self, source_node):
         # Get the sub-graph connected to this node
