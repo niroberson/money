@@ -35,12 +35,21 @@ class Database:
         return node.one
 
     def get_node_by_id(self, id):
-        cypher_query = "MATCH (a) WHERE id(a)=" + id + " RETURN a"
+        cypher_query = "MATCH (a) WHERE id(a)=" + str(id) + " RETURN a"
         node = self.execute_query(cypher_query)
         return node.one
 
+    def get_edge_by_id(self, id):
+        cypher_query = "MATCH (a)-[r]-(b) WHERE id(r)=" + str(id) + " RETURN r"
+        edge = self.execute_query(cypher_query)
+        return edge.one
+
     def get_all_node_ids(self):
         cypher_query = "MATCH (a) RETURN id(a)"
+        return self.execute_query(cypher_query, 100)
+
+    def get_all_edge_ids(self):
+        cypher_query = "MATCH (a)-[r]-(b) RETURN id(r)"
         return self.execute_query(cypher_query, 100)
 
     def one_to_many_nodes(self, node=None, id=None):
@@ -74,7 +83,7 @@ class Database:
         else:
             cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + source_id + " RETURN r"
         edge_store = []
-        for edgeX in self.execute_query(cypher_query):
+        for edgeX in self.execute_query(cypher_query, 100):
             edge_store.append(edgeX.r)
         return edge_store
 
