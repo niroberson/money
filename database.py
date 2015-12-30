@@ -58,13 +58,18 @@ class Database:
             edge_store.append(edgeX.r)
         return edge_store
 
-    def one_to_many_edges(self, source, targets=None, exclude=None):
+    def one_to_many_edges(self, source=None, id=None, targets=None, exclude=None):
+        source_id = None
+        if source:
+            source_id = str(source.id)
+        elif id:
+            source_id = str(id)
         if targets:
-            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(source.id) + " AND id(b) IN " + str(targets) + " RETURN r"
+            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + source_id + " AND id(b) IN " + str(targets) + " RETURN r"
         elif exclude:
-            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(source.id) + " AND NOT id(b)=" + str(exclude.id) + " RETURN r"
+            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + source_id + " AND NOT id(b)=" + str(exclude.id) + " RETURN r"
         else:
-            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(source.id) + " RETURN r"
+            cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + source_id + " RETURN r"
         edge_store = []
         for edgeX in self.execute_query(cypher_query):
             edge_store.append(edgeX.r)
@@ -85,15 +90,18 @@ class Database:
         count = self.execute_query(cypher_query)
         return count.one
 
-    def bfs_nodes(self, source_node):
-        cypher_query = "MATCH (a)-[r*0..2]-(b) WHERE id(a)=" + str(source_node.id) + " RETURN b"
+    def bfs_nodes(self, source_node=None, id=None):
+        if source_node:
+            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0..2]-(b) RETURN b"
+        else:
+            cypher_query = "START n=node(" + str(id) + ") MATCH (n)-[r*0..2]-(b) RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query, 20):
+        for nodeX in self.execute_query(cypher_query, 100):
             node_store.append(nodeX.b)
         return node_store
 
     def bfs_edges(self, source_node):
-        cypher_query = "MATCH (a)-[r*0..2]-(b) WHERE id(a)=" + source_node.id + " RETURN r"
+        cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0..2]-(b) RETURN r"
         edge_store = []
         for edgeX in self.execute_query(cypher_query):
             edge_store.append(edgeX.r)

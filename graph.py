@@ -69,45 +69,45 @@ class Graph(nx.MultiDiGraph):
         node['id'] = id
         return Node(id=id, prop=node['properties'])
 
-    def load_graph_from_source(self, source):
-        # Get directly associated nodes
-        nodes = self.database.one_to_many_nodes(source)
-        nodes = [Node(nodeX) for nodeX in nodes]
-        [self.update(node=nodeX) for nodeX in nodes]
+    def load_nodes_from_source(self, source):
+        bfs_nodes = self.database.bfs_nodes(source)
+        [self.update(Node(node)) for node in bfs_nodes]
 
+    def load_source_edges(self, source):
+        # Get all current graph nodes
+        nodes = self.nodes()
         # Get these edges
-        node_ids = [nodeX.id for nodeX in nodes]
-        edges = self.database.one_to_many_edges(source, node_ids)
+        edges = self.database.one_to_many_edges(source, nodes)
         edges = [Edge(edgeX) for edgeX in edges]
         edges = self.compute_distances(edges)
         [self.update(edge=edgeX) for edgeX in edges]
 
+    def load_graph_edges(self):
+        node_ids = self.nodes()
+        # Load edges for all nodes
+        for node in node_ids:
+            this_edges = self.database.one_to_many_edges(id=node, targets=node_ids)
+            this_edges = [Edge(edgeX) for edgeX in this_edges]
+            this_edges = self.compute_distances(this_edges)
+            [self.update(edge=edgeX) for edgeX in this_edges]
+
     def create_subgraph(self, source_node):
-
-        # nodes = self.database.bfs_nodes(source_node)
-        # nodes = [Node(nodeX) for nodeX in nodes]
-        # [self.update(node=nodeX) for nodeX in nodes]
-
         # Get the sub-graph connected to this node
-        self.load_graph_from_source(source_node)
-
-        # For each node now in the graph, do the same thing
-        current_nodes = self.nodes()
-        current_nodes = [self.get_local_node_by_id(nodeX_id) for nodeX_id in current_nodes]
-        [self.load_graph_from_source(nodeX) for nodeX in current_nodes]
+        self.load_nodes_from_source(source_node)
+        self.load_graph_edges()
 
     def compute_distances(self, edges):
         results = []
         for edge in edges:
-            edge.distance = self.compute_distance(edge.source_node, edge.target_node)
+            edge.distance = self.compute_distance(edge)
             results.append(edge)
         return results
 
-    def compute_distance(self, node_source, node_target):
+    def compute_distance(self, edge):
         # TODO: Add count of relationship not just number of relationships here
-        n_i = self.database.count_one_to_many_edges(node_source)
-        n_j = self.database.count_one_to_many_edges(node_target)
-        n_i_j = self.database.count_one_to_one_edges(node_source, node_target)
+        n_i = self.database.count_one_to_many_edges(edge.source_node)
+        n_j = self.database.count_one_to_many_edges(edge.target_node)
+        n_i_j = int(edge.properties['COUNT'])
         ksp = n_i_j/(n_i+n_j-n_i_j)
         d = 1/ksp - 1
         return d

@@ -2,6 +2,7 @@ from flask import Flask, request, session, g ,redirect, url_for, \
     abort, render_template, send_from_directory
 
 from factory import RecommenderFactory
+from config import Config
 
 DEBUG = True
 SECRET_KEY = 'development key'
@@ -24,7 +25,8 @@ def submit_query():
             keyword = request.form['keyword']
         except KeyError:
             error = 'No keyword entered or could be found'
-        results, error = RecommenderFactory(DEBUG).search_concept(keyword)
+        config = Config()
+        results, error = RecommenderFactory(config, DEBUG).search_concept(keyword)
         if error:
             return render_template('query.html', keyword=keyword, error=error)
         else:

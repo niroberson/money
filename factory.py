@@ -4,7 +4,7 @@ from results import Results
 
 class RecommenderFactory:
     # factory class to use analyzer, graph, query, and results class
-    def __init__(self, dev_flag, config=None):
+    def __init__(self, config, dev_flag):
         self.graph = Graph(config, dev_flag)
         self.config = config
 
@@ -22,6 +22,7 @@ class RecommenderFactory:
         return results, error
 
     def create_distance_graph(self):
-        nodes = self.graph.database.get_all_node_ids()
+        seed = 3
+        nodes = self.graph.create_subgraph()
         return nodes
 
