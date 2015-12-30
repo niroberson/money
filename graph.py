@@ -41,7 +41,7 @@ class Graph(nx.MultiDiGraph):
             self.add_node(node.id, properties=node.properties, ids=node.ids)
             print('Added %s to graph network\n' % (node.properties['NAME']))
         if edge:
-            self.add_edge(edge.source_node.id, edge.target_node.id, weight=edge.distance, properties=edge.properties)
+            self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance, properties=edge.properties)
             print('Added edge between %s and %s to graph network\n' % (edge.source_node.properties['NAME'],
                                                                      edge.target_node.properties['NAME']))
 
@@ -71,7 +71,7 @@ class Graph(nx.MultiDiGraph):
 
     def load_nodes_from_source(self, source):
         bfs_nodes = self.database.bfs_nodes(source)
-        [self.update(Node(node)) for node in bfs_nodes]
+        [self.update(node=Node(node)) for node in bfs_nodes]
 
     def load_source_edges(self, source):
         # Get all current graph nodes
@@ -91,10 +91,20 @@ class Graph(nx.MultiDiGraph):
             this_edges = self.compute_distances(this_edges)
             [self.update(edge=edgeX) for edgeX in this_edges]
 
+    def load_edges_from_graph(self, source_node):
+        edges = self.database.bfs_edges(source_node)
+        for edgeX in edges:
+            for edgeY in edgeX:
+                # Determine if this edge is already in the network
+                edgeY = Edge(edgeY)
+                if not self.has_edge(edgeY.source_node, edgeY.target_node, key=edgeY.id):
+                    edgeY.distance = self.compute_distance(edgeY)
+                    self.update(edge=edgeY)
+
     def create_subgraph(self, source_node):
         # Get the sub-graph connected to this node
         self.load_nodes_from_source(source_node)
-        self.load_graph_edges()
+        self.load_edges_from_graph(source_node)
 
     def compute_distances(self, edges):
         results = []
@@ -104,9 +114,11 @@ class Graph(nx.MultiDiGraph):
         return results
 
     def compute_distance(self, edge):
-        # TODO: Add count of relationship not just number of relationships here
-        n_i = self.database.count_one_to_many_edges(edge.source_node)
-        n_j = self.database.count_one_to_many_edges(edge.target_node)
+        # TODO: Add COUNT of predication not just number of relationships here
+        n_i = [int(edgeX.properties['COUNT']) for edgeX in self.database.one_to_many_edges(edge.source_node)]
+        n_i = sum(n_i)
+        n_j = [int(edgeX.properties['COUNT']) for edgeX in self.database.one_to_many_edges(edge.target_node)]
+        n_j = sum(n_j)
         n_i_j = int(edge.properties['COUNT'])
         ksp = n_i_j/(n_i+n_j-n_i_j)
         d = 1/ksp - 1
