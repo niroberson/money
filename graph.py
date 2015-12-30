@@ -39,10 +39,10 @@ class Graph(nx.MultiDiGraph):
     def update(self, node=None, edge=None):
         if node:
             self.add_node(node.id, properties=node.properties, ids=node.ids)
-            print('Added %s to graph network\n' % (node.properties['NAME']))
+            print('Added: %s \n' % (node.properties['NAME']))
         if edge:
             self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance, properties=edge.properties)
-            print('Added edge between %s and %s to graph network\n' % (edge.source_node.properties['NAME'],
+            print('Added edge: %s:%s:%s to graph network\n' % (edge.source_node.properties['NAME'], edge.type,
                                                                      edge.target_node.properties['NAME']))
 
     def update_from(self, nodes=None, edges=None):
@@ -97,7 +97,9 @@ class Graph(nx.MultiDiGraph):
             for edgeY in edgeX:
                 # Determine if this edge is already in the network
                 edgeY = Edge(edgeY)
-                if not self.has_edge(edgeY.source_node, edgeY.target_node, key=edgeY.id):
+                if self.has_edge(edgeY.source_node.id, edgeY.target_node.id, key=edgeY.id):
+                    continue
+                else:
                     edgeY.distance = self.compute_distance(edgeY)
                     self.update(edge=edgeY)
 
