@@ -1,0 +1,4 @@
+LOAD CSV WITH HEADERS FROM 'https://media.githubusercontent.com/media/niroberson/money/master/Data/NodeInRelsFixed4.csv?token=ACq3Qc1VL1bu6m9BiXOfLtUEDFzWJvlsks5WhJ9IwA%3D%3D' as line 
+FIELDTERMINATOR '*'
+CREATE (:Concept {name:line.name})
+
