@@ -3,15 +3,14 @@ from py2neo.packages.httpstream import http
 
 
 class Database:
-    def __init__(self, config, dev_flag=True):
+    def __init__(self, config):
         self.config = config
-        self.dev_flag = dev_flag
         self.connection = self.connect()
         self.n_cache = dict()
         http.socket_timeout = 9999
 
     def connect(self):
-        if self.dev_flag:
+        if self.config.dev_flag:
             return self.connect_local()
         else:
             return self.connect_local()
@@ -26,7 +25,7 @@ class Database:
         return "http://" + user + ":" + password + "@" + host
 
     def execute_query(self, cypher_query, limit=None):
-        if self.dev_flag and limit:
+        if self.config.dev_flag and limit:
             cypher_query += " LIMIT " + str(limit)
         return self.connection.cypher.execute(cypher_query)
 
@@ -119,14 +118,14 @@ class Database:
         else:
             cypher_query = "START n=node(" + str(id) + ") MATCH (n)-[r*0..2]->(b) WHERE NOT id(b)=" + str(id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query, 100):
+        for nodeX in self.execute_query(cypher_query, 200):
             node_store.append(nodeX.b)
         return node_store
 
     def bfs_edges(self, source_node):
         cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0..2]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r"
         edge_store = []
-        for edgeX in self.execute_query(cypher_query, 100):
+        for edgeX in self.execute_query(cypher_query, 200):
             edge_store.append(edgeX.r)
         return edge_store
 

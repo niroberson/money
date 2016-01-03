@@ -6,7 +6,6 @@ class GraphObject:
     def __init__(self, obj):
         if hasattr(obj, '_id'):
             self.id = obj._id
-            self.ids = str(obj._id)
         if hasattr(obj, 'properties'):
             self.properties = obj.properties
 
@@ -15,8 +14,7 @@ class Node(GraphObject):
     def __init__(self, node=None, id=None, prop=None):
         GraphObject.__init__(self, node)
         if id:
-            self.id = id
-            self.ids = str(id)
+            self.id = str(id)
         if prop:
             self.properties = prop
 
@@ -52,17 +50,18 @@ class Edge(GraphObject):
 
 class Graph(nx.MultiDiGraph):
     # Build a networkX graph from concepts and relationships
-    def __init__(self, config, dev_flag):
+    def __init__(self, config):
         nx.MultiDiGraph.__init__(self)
-        self.database = Database(config, dev_flag)
-        self.dev_flag = dev_flag
+        self.database = Database(config)
+        self.config = config
 
     def update(self, node=None, edge=None):
         if node:
-            self.add_node(node.id, properties=node.properties, ids=node.ids)
+            self.add_node(node.id, properties=node.properties)
             print('Added: %s' % (node.properties['NAME']))
         if edge:
-            self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance, properties=edge.properties)
+            self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance,
+                          properties=edge.properties, type=edge.type)
             print('Added edge: %s:%s:%s to network' % (edge.source_node.properties['NAME'], edge.type,
                                                                      edge.target_node.properties['NAME']))
 
@@ -73,7 +72,7 @@ class Graph(nx.MultiDiGraph):
         """
         # Add nodes into graph
         for node in nodes:
-            self.add_node(node.id, properties=node.properties, ids=node.ids)  # Add attributes of Node to network
+            self.add_node(node.id, properties=node.properties)  # Add attributes of Node to network
 
         # Add edges into graph
         for edge in edges:
