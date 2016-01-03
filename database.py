@@ -103,7 +103,6 @@ class Database:
         count = self.execute_query(cypher_query)
         return count.one
 
-
     def count_one_to_many_nodes(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(b)"
         count = self.execute_query(cypher_query)
