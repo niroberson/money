@@ -103,7 +103,11 @@ class Graph(nx.MultiDiGraph):
 
     def load_edges_from_graph(self, source_node):
         edges = self.database.bfs_edges(source_node)
+        count = 0
+        fin = len(edges)
         for edgeX in edges:
+            print('Loading relationship %i of %i' % (count, fin))
+            count += 1
             for edgeY in edgeX:
                 # Determine if this edge is already in the network
                 if self.has_edge(edgeY.start_node._id, edgeY.end_node._id, key=edgeY._id):
