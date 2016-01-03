@@ -119,11 +119,8 @@ class Graph(nx.MultiDiGraph):
         return results
 
     def compute_distance(self, edge):
-        # TODO: Add COUNT of predication not just number of relationships here
-        n_i = [int(edgeX.properties['COUNT']) for edgeX in self.database.one_to_many_edges(edge.source_node)]
-        n_i = sum(n_i)
-        n_j = [int(edgeX.properties['COUNT']) for edgeX in self.database.one_to_many_edges(edge.target_node)]
-        n_j = sum(n_j)
+        n_i = self.database.sum_count_one_to_many_edges(edge.id, edge.source_node)
+        n_j = self.database.sum_count_one_to_many_edges(edge.id, edge.target_node)
         n_i_j = int(edge.properties['COUNT'])
         ksp = n_i_j/(n_i+n_j-n_i_j)
         d = 1/ksp - 1

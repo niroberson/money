@@ -7,6 +7,7 @@ class Database:
         self.config = config
         self.dev_flag = dev_flag
         self.connection = self.connect()
+        self.n_cache = dict()
         http.socket_timeout = 9999
 
     def connect(self):
@@ -87,10 +88,21 @@ class Database:
             edge_store.append(edgeX.r)
         return edge_store
 
+    def sum_count_one_to_many_edges(self, eid, source):
+        # If this edge is in the cache, pull from cache
+        if eid in self.n_cache:
+            return self.n_cache[eid]
+        n_i = [int(edgeX.properties['COUNT']) for edgeX in self.one_to_many_edges(source=source)]
+        n = sum(n_i)
+        # Update cache
+        self.n_cache[eid] = n
+        return n
+
     def count_one_to_many_edges(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(r)"
         count = self.execute_query(cypher_query)
         return count.one
+
 
     def count_one_to_many_nodes(self, node):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node.id) + " RETURN count(b)"
