@@ -10,7 +10,7 @@ def test_traversal():
 
 def test_viz():
     config = Config()
-    rf = RecommenderFactory(config, False)
+    rf = RecommenderFactory(config, True)
     concept = 'BRCA1'
     results, error = rf.search_concept(concept)
     results.to_graph()

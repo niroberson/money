@@ -22,18 +22,32 @@ class Node(GraphObject):
 
 
 class Edge(GraphObject):
-    def __init__(self, relationship):
+    def __init__(self, relationship, database):
         GraphObject.__init__(self, relationship)
+        self.database = database
         self.type = relationship.type
         self.source_node = Node(relationship.start_node)
         self.target_node = Node(relationship.end_node)
         if 'weight' in relationship:
             self.distance = relationship['weight']
-            self.update = False
-            print('Got weight from database as: %f' % (self.distance) )
+            print('Got Edge: %s:%s:%s Weight:%f' % (self.source_node.properties['NAME'], self.type,
+                                                    self.target_node.properties['NAME'], self.distance))
         else:
-            self.distance = None
-            self.update = True
+            self.distance = self.compute_distance()
+            self.set_weight()
+
+    def compute_distance(self):
+        n_i = self.database.sum_count_one_to_many_edges(self.id, self.source_node)
+        n_j = self.database.sum_count_one_to_many_edges(self.id, self.target_node)
+        n_i_j = int(self.properties['COUNT'])
+        ksp = n_i_j/(n_i+n_j-n_i_j)
+        d = 1/ksp - 1
+        return d
+
+    def set_weight(self):
+        self.database.set_weight()
+        print('Set Edge: %s:%s:%s Weight:%f' % (self.source_node.properties['NAME'], self.type,
+                                                self.target_node.properties['NAME'], self.distance))
 
 
 class Graph(nx.MultiDiGraph):
@@ -49,13 +63,8 @@ class Graph(nx.MultiDiGraph):
             print('Added: %s' % (node.properties['NAME']))
         if edge:
             self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance, properties=edge.properties)
-            print('Added edge: %s:%s:%s to graph network' % (edge.source_node.properties['NAME'], edge.type,
+            print('Added edge: %s:%s:%s to network' % (edge.source_node.properties['NAME'], edge.type,
                                                                      edge.target_node.properties['NAME']))
-            if self.dev_flag and edge.update:
-                self.set_weight(edge)
-
-    def set_weight(self, edge):
-        self.database.set_weight(edge)
 
     def update_from(self, nodes=None, edges=None):
         """
@@ -90,8 +99,7 @@ class Graph(nx.MultiDiGraph):
         nodes = self.nodes()
         # Get these edges
         edges = self.database.one_to_many_edges(source, nodes)
-        edges = [Edge(edgeX) for edgeX in edges]
-        edges = self.compute_distances(edges)
+        edges = [Edge(edgeX, self.database) for edgeX in edges]
         [self.update(edge=edgeX) for edgeX in edges]
 
     def load_edges_from_graph(self, source_node):
@@ -99,32 +107,15 @@ class Graph(nx.MultiDiGraph):
         for edgeX in edges:
             for edgeY in edgeX:
                 # Determine if this edge is already in the network
-                edgeY = Edge(edgeY)
+                edgeY = Edge(edgeY, self.database)
                 if self.has_edge(edgeY.source_node.id, edgeY.target_node.id, key=edgeY.id):
                     continue
-                elif edgeY.distance is None:
-                    edgeY.distance = self.compute_distance(edgeY)
                 self.update(edge=edgeY)
 
     def create_subgraph(self, source_node):
         # Get the sub-graph connected to this node
         self.load_nodes_from_source(source_node)
         self.load_edges_from_graph(source_node)
-
-    def compute_distances(self, edges):
-        results = []
-        for edge in edges:
-            edge.distance = self.compute_distance(edge)
-            results.append(edge)
-        return results
-
-    def compute_distance(self, edge):
-        n_i = self.database.sum_count_one_to_many_edges(edge.id, edge.source_node)
-        n_j = self.database.sum_count_one_to_many_edges(edge.id, edge.target_node)
-        n_i_j = int(edge.properties['COUNT'])
-        ksp = n_i_j/(n_i+n_j-n_i_j)
-        d = 1/ksp - 1
-        return d
 
     def get_shortest_paths(self, source_node):
         paths = nx.single_source_dijkstra_path(self, source_node.id)
@@ -136,9 +127,4 @@ class Graph(nx.MultiDiGraph):
         for eid in edge_ids:
             eid = eid[0]
             edge = self.database.get_edge_by_id(eid)
-            edge = Edge(edge)
-            if edge.distance is None:
-                edge.distance = self.compute_distance(edge)
-                self.set_weight(edge)
-                print('Set Edge: %s:%s:%s Weight:%f' % (edge.source_node.properties['NAME'], edge.type,
-                      edge.target_node.properties['NAME'], edge.distance))
+            Edge(edge, self.database)
