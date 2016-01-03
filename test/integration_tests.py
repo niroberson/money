@@ -16,4 +16,4 @@ def test_viz():
     results.to_graph_json()
 
 if __name__ == "__main__":
-    test_viz()
+    test_traversal()

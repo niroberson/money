@@ -106,9 +106,9 @@ class Graph(nx.MultiDiGraph):
         for edgeX in edges:
             for edgeY in edgeX:
                 # Determine if this edge is already in the network
-                edgeY = Edge(edgeY, self.database)
-                if self.has_edge(edgeY.source_node.id, edgeY.target_node.id, key=edgeY.id):
+                if self.has_edge(edgeY.start_node._id, edgeY.end_node._id, key=edgeY._id):
                     continue
+                edgeY = Edge(edgeY, self.database)
                 self.update(edge=edgeY)
 
     def create_subgraph(self, source_node):
