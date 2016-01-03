@@ -45,7 +45,7 @@ class Edge(GraphObject):
         return d
 
     def set_weight(self):
-        self.database.set_weight()
+        self.database.set_weight(self)
         print('Set Edge: %s:%s:%s Weight:%f' % (self.source_node.properties['NAME'], self.type,
                                                 self.target_node.properties['NAME'], self.distance))
 
