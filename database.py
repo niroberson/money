@@ -11,13 +11,17 @@ class Database:
 
     def connect(self):
         if self.config.dev_flag:
-            return self.connect_local()
+            return self.connect_remote()
         else:
-            return self.connect_local()
+            return self.connect_remote()
             # TODO: return self.connect_production()
 
     def connect_local(self):
         endpoint = Database.create_endpoint(self.config.host_local, self.config.user, self.config.pw)
+        return Graph(endpoint)
+
+    def connect_remote(self):
+        endpoint = Database.create_endpoint(self.config.host_remote, self.config.user, self.config.pw)
         return Graph(endpoint)
 
     @staticmethod

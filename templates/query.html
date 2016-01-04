@@ -5,6 +5,10 @@
 <h1>
     Welcome to the Money Project Recommender System for Medline
 </h1>
+<form action="/query" method="POST">
+    <p><input type=text name=keyword /></p>
+    <p><input type=submit value=Submit /></p>
+</form>
 {% if keyword %}
 <h2>Searching for <strong>{{ keyword }}</strong></h2>
 {% if error %}
@@ -12,10 +16,7 @@
 {% else %}
 {{ results|safe }}
 {% endif %}
-{% else %}
-<form action="/query" method="POST">
-    <p><input type=text name=keyword /></p>
-    <p><input type=submit value=Submit /></p>
-</form>
 {% endif%}
+
+
 </body>
