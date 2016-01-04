@@ -16,7 +16,7 @@ class Results:
         # Create table from distance results
         # Find the shortest paths in this subgraph
         paths, path_lengths = self.graph.get_shortest_paths(concept_node)
-
+        path_compiled = self.create_readable_path(paths)
         # Create results in data frame
         path_nodes = path_lengths.keys()
         names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
@@ -30,8 +30,25 @@ class Results:
 
     def create_readable_path(self, paths):
         # Multiple paths may exist between nodes, we need to select the shortest paths
-        for node in paths.keys():
-            paths[node]
+
+        for nodeX in paths.keys():
+            last_node = None
+            node_pairs = []
+            for nodeY in paths[nodeX]:
+                if last_node:
+                    node_pairs.append([last_node, nodeY])
+                else:
+                    last_node = nodeY
+
+            path_comp = ''
+            for np in node_pairs:
+                edge = self.graph.get_edge_data(np[0], np[1])
+                # Get edge type (predication)
+                eid = edge.keys()
+                predication = edge[eid[0]]['type']
+                path_comp += (':').join([str(np[0]), predication, np[1]])
+        return
+
 
     def to_html(self):
         return self.table.to_html()

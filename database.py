@@ -122,7 +122,7 @@ class Database:
         else:
             cypher_query = "START n=node(" + str(id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query, 2400):
+        for nodeX in self.execute_query(cypher_query, 160):
             node_store.append(nodeX.b)
         return node_store
 
@@ -132,7 +132,7 @@ class Database:
         else:
             cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r"
         edge_store = []
-        for edgeX in self.execute_query(cypher_query, 2400):
+        for edgeX in self.execute_query(cypher_query, 160):
             edge_store.append(edgeX.r)
         return edge_store
 

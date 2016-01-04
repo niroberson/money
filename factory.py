@@ -21,11 +21,18 @@ class RecommenderFactory:
         return results
 
     def search_concept_predication_object(self, concept, predication, object):
-        concept_node = self.graph.get_node_by_name(object)
+        concept_node = self.graph.get_node_by_name(concept)
+        object_node = self.graph.get_node_by_name(object)
+
         self.graph.create_subgraph(concept_node, max_level=1)
         # Get the results
         results = Results(self.config, self.graph, concept_node)
         return results
+
+    def search_concept_object(self, config, object):
+        concept_node = self.graph.get_node_by_name(object)
+        object_node = self.graph.get_node_by_name(object)
+
 
     def create_distance_graph(self):
         self.graph.traverse()
