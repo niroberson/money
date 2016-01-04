@@ -49,7 +49,9 @@ class Results:
                 except KeyError:
                     continue
                 predication = props['type']
-                path_comp += (':').join([str(np[0]), predication, str(np[1])])
+                n1 = self.graph.get_local_node_by_id(np[0])
+                n2 = self.graph.get_local_node_by_id(np[1])
+                path_comp += (':').join([n1.properties['NAME'], predication, n2.properties['NAME']])
             results.append(path_comp)
         return results
 
