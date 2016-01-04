@@ -9,12 +9,19 @@ class RecommenderFactory:
         self.config = config
 
     def search_concept(self, concept):
-        # Get the node for this concept
         concept_node = self.graph.get_node_by_name(concept)
-
-        # Create the sub-graph around this concept node
         self.graph.create_subgraph(concept_node)
+        results = Results(self.config, self.graph, concept_node)
+        return results
 
+    def search_concept_predication(self, concept, predication):
+        concept_node = self.graph.get_node_by_name(concept)
+        self.graph.create_subgraph(concept_node, predication)
+        results = Results(self.config, self.graph, concept_node)
+
+    def search_concept_predication_object(self, concept, predication, object):
+        concept_node = self.graph.get_node_by_name(concept)
+        self.graph.create_subgraph(object)
         # Get the results
         results = Results(self.config, self.graph, concept_node)
         return results

@@ -41,11 +41,11 @@ def submit_query():
         except KeyError:
             pass
 
-        if keyword:
+        if object:
             results = RecommenderFactory(config).search_concept(keyword)
             table = results.to_html()
             return render_template('query.html', keyword=keyword, results=table)
-        elif keyword:
+        elif predication:
             results = RecommenderFactory(config).search_concept(keyword)
             table = results.to_html()
             return render_template('query.html', keyword=keyword, results=table)

@@ -115,7 +115,7 @@ class Graph(nx.MultiDiGraph):
                 edgeY = Edge(edgeY, self.database)
                 self.update(edge=edgeY)
 
-    def create_subgraph(self, source_node):
+    def create_subgraph(self, source_node, predication, max_level=1):
         # Get the sub-graph connected to this node
         self.load_nodes_from_source(source_node)
         self.load_edges_from_graph(source_node)
