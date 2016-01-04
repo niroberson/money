@@ -4,7 +4,7 @@ from flask import Flask, request, session, g ,redirect, url_for, \
 from factory import RecommenderFactory
 from config import Config
 
-DEBUG = True
+DEBUG = False
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'

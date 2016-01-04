@@ -28,6 +28,11 @@ class Results:
         table = DataFrame(data, index=path_nodes)
         self.table = table.sort('Distance')
 
+    def create_readable_path(self, paths):
+        # Multiple paths may exist between nodes, we need to select the shortest paths
+        for node in paths.keys():
+            paths[node]
+
     def to_html(self):
         return self.table.to_html()
 
@@ -52,8 +57,11 @@ class Results:
             graph_data['nodes'].append(this_data)
 
         # Get the edges
-        for source_target in self.graph.edges():
-            pass
+        graph_data['edges'] = []
+        for source, target in self.graph.edges():
+            e_data = self.graph.get_edge_data(source, target)
+            this_data = {'source': source, 'target': target, 'type':e_data['type'], 'weight': e_data['weight']}
+            graph_data['edges'].append()
         temp_path = os.path.join(self.config.data_dir, 'graph.json')
         json.dump(graph_data, open(temp_path, 'w'))
         # TODO: convert to json readable by sigma or cytoscape
