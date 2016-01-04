@@ -128,7 +128,7 @@ class Database:
 
     def bfs_edges(self, source_node, predication=None, max_level=1):
         if predication:
-            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[:" + predication + "*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r"
+            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r:" + predication + "*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r"
         else:
             cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r"
         edge_store = []
