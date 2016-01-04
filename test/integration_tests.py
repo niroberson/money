@@ -15,5 +15,12 @@ def test_viz():
     results, error = rf.search_concept(concept)
     results.to_graph_json()
 
+def test_results():
+    config = Config()
+    rf = RecommenderFactory(config)
+    concept = 'BRCA1'
+    results, error = rf.search_concept(concept)
+    print(results.table)
+
 if __name__ == "__main__":
-    test_traversal()
+    test_results()
