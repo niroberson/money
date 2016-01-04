@@ -15,6 +15,7 @@ def test_viz():
     results, error = rf.search_concept(concept)
     results.to_graph_json()
 
+
 def test_results():
     config = Config()
     rf = RecommenderFactory(config)

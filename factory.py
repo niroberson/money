@@ -17,9 +17,7 @@ class RecommenderFactory:
 
         # Get the results
         results = Results(self.config, self.graph, concept_node)
-
-        error = None
-        return results, error
+        return results
 
     def create_distance_graph(self):
         self.graph.traverse()

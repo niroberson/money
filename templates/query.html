@@ -5,8 +5,11 @@
 <h1>
     Welcome to the Money Project Recommender System for Medline
 </h1>
-<form action="/query" method="POST">
-    <p><input type=text name=keyword /></p>
+</p>
+ <form action="/query" method="POST">
+    <p><input type=text name=keyword placeholder="Subject" />
+        <input type=text name=predication placeholder="Predication" />
+        <input type=text name=object placeholder="Object"/></p>
     <p><input type=submit value=Submit /></p>
 </form>
 {% if keyword %}
