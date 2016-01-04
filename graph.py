@@ -89,8 +89,8 @@ class Graph(nx.MultiDiGraph):
         node['id'] = id
         return Node(id=id, prop=node['properties'])
 
-    def load_nodes_from_source(self, source):
-        bfs_nodes = self.database.bfs_nodes(source)
+    def load_nodes_from_source(self, source, max_level):
+        bfs_nodes = self.database.bfs_nodes(source, max_level=max_level)
         [self.update(node=Node(node)) for node in bfs_nodes]
 
     def load_source_edges(self, source):
@@ -101,8 +101,8 @@ class Graph(nx.MultiDiGraph):
         edges = [Edge(edgeX, self.database) for edgeX in edges]
         [self.update(edge=edgeX) for edgeX in edges]
 
-    def load_edges_from_graph(self, source_node):
-        edges = self.database.bfs_edges(source_node)
+    def load_edges_from_graph(self, source_node, predication, max_level):
+        edges = self.database.bfs_edges(source_node, predication=predication, max_level=max_level)
         count = 0
         fin = len(edges)
         for edgeX in edges:
@@ -115,10 +115,10 @@ class Graph(nx.MultiDiGraph):
                 edgeY = Edge(edgeY, self.database)
                 self.update(edge=edgeY)
 
-    def create_subgraph(self, source_node, predication, max_level=1):
+    def create_subgraph(self, source_node, predication, max_level):
         # Get the sub-graph connected to this node
-        self.load_nodes_from_source(source_node)
-        self.load_edges_from_graph(source_node)
+        self.load_nodes_from_source(source_node, max_level=max_level)
+        self.load_edges_from_graph(source_node, predication=predication, max_level=max_level)
 
     def get_shortest_paths(self, source_node):
         paths = nx.single_source_dijkstra_path(self, source_node.id)

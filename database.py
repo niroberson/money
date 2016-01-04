@@ -116,18 +116,21 @@ class Database:
         count = self.execute_query(cypher_query)
         return count.one
 
-    def bfs_nodes(self, source_node=None, id=None):
+    def bfs_nodes(self, source_node=None, id=None, max_level=1):
         if source_node:
-            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0..2]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN b"
+            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN b"
         else:
-            cypher_query = "START n=node(" + str(id) + ") MATCH (n)-[r*0..2]->(b) WHERE NOT id(b)=" + str(id) + " RETURN b"
+            cypher_query = "START n=node(" + str(id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(id) + " RETURN b"
         node_store = []
         for nodeX in self.execute_query(cypher_query, 2400):
             node_store.append(nodeX.b)
         return node_store
 
-    def bfs_edges(self, source_node):
-        cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0..2]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r"
+    def bfs_edges(self, source_node, predication=None, max_level=1):
+        if predication:
+            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[:" + predication + "*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r"
+        else:
+            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r"
         edge_store = []
         for edgeX in self.execute_query(cypher_query, 2400):
             edge_store.append(edgeX.r)
