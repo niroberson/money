@@ -16,22 +16,22 @@ class Results:
         # Create table from distance results
         # Find the shortest paths in this subgraph
         paths, path_lengths = self.graph.get_shortest_paths(concept_node)
-        path_compiled = self.create_readable_path(paths)
-        # Create results in data frame
         path_nodes = path_lengths.keys()
+        path_compiled = self.create_readable_path(path_nodes, paths)
+        # Create results in data frame
         names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
         path_names = [paths[nodeX] for nodeX in path_nodes]
         paths_lengths_l = [path_lengths[nodeX] for nodeX in path_nodes]
         data = {'Concept': names,
                 'Distance': paths_lengths_l,
-                'Path': path_names}
+                'Path': path_compiled}
         table = DataFrame(data, index=path_nodes)
         self.table = table.sort('Distance')
 
-    def create_readable_path(self, paths):
+    def create_readable_path(self, path_nodes, paths):
         # Multiple paths may exist between nodes, we need to select the shortest paths
-
-        for nodeX in paths.keys():
+        results = []
+        for nodeX in path_nodes:
             last_node = None
             node_pairs = []
             for nodeY in paths[nodeX]:
@@ -44,11 +44,14 @@ class Results:
             for np in node_pairs:
                 edge = self.graph.get_edge_data(np[0], np[1])
                 # Get edge type (predication)
-                eid = edge.keys()
-                predication = edge[eid[0]]['type']
-                path_comp += (':').join([str(np[0]), predication, np[1]])
-        return
-
+                try:
+                    eid, props = edge.popitem()
+                except KeyError:
+                    continue
+                predication = props['type']
+                path_comp += (':').join([str(np[0]), predication, str(np[1])])
+            results.append(path_comp)
+        return results
 
     def to_html(self):
         return self.table.to_html()
