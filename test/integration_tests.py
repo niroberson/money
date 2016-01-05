@@ -24,4 +24,4 @@ def test_results():
     print(results.table)
 
 if __name__ == "__main__":
-    test_results()
+    test_traversal()

@@ -33,7 +33,6 @@ class RecommenderFactory:
         concept_node = self.graph.get_node_by_name(object)
         object_node = self.graph.get_node_by_name(object)
 
-
     def create_distance_graph(self):
         self.graph.traverse()
 
