@@ -1,7 +1,7 @@
 import os
 
 
-class Config:
+class Config(object):
     def __init__(self, dev_flag=True):
         self.dev_flag = dev_flag
         self.data_dir = os.path.join(os.path.curdir, '..', 'static')

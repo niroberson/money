@@ -5,7 +5,7 @@ import networkx as nx
 import os
 
 
-class Results:
+class Results(object):
     def __init__(self, config, graph, concept_node):
         self.config = config
         self.graph = graph

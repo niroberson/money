@@ -2,7 +2,7 @@ from py2neo import Graph
 from py2neo.packages.httpstream import http
 
 
-class Database:
+class Database(object):
     def __init__(self, config):
         self.config = config
         self.connection = self.connect()

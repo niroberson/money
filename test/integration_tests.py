@@ -5,7 +5,7 @@ from config import Config
 def test_traversal():
     config = Config()
     rf = RecommenderFactory(config)
-    rf.create_distance_graph()
+    rf.traverse()
 
 
 def test_viz():

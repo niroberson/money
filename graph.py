@@ -1,8 +1,8 @@
 import networkx as nx
 from database import Database
-from multiprocessing import Pool
 
-class GraphObject:
+
+class GraphObject(object):
     def __init__(self, obj):
         if hasattr(obj, '_id'):
             self.id = obj._id
@@ -126,9 +126,4 @@ class Graph(nx.MultiDiGraph):
         return paths, path_lengths
 
     def create_edge(self, eid):
-            Edge(self.database.get_edge_by_id(eid[0]), self.database)
-
-    def traverse(self):
-        edge_ids = self.database.get_all_edge_ids()
-        pool = Pool(processes=4)
-        pool.apply(self.create_edge, args=(edge_ids,))
+        Edge(self.database.get_edge_by_id(eid), self.database)
