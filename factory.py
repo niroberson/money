@@ -46,8 +46,7 @@ class RecommenderFactory(object):
         for eid in edge_ids:
             count += 1
             self.graph.create_edge(eid[0])
-            if count % 1000 == 0:
-                print('On edge %i of %i' % (count, len(edge_ids)))
+            print('On edge %i of %i' % (count, len(edge_ids)))
 
     def traverse_nodes(self):
         node_ids = self.graph.database.get_all_node_ids()

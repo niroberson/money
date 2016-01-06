@@ -154,6 +154,9 @@ class Graph(nx.MultiDiGraph):
             path_lengths = nx.single_source_dijkstra_path_length(self, source_node.id)
         return paths, path_lengths
 
+    def all_pairs_shortest_paths(self, source_node):
+        pass
+
     def create_edge(self, eid):
         Edge(self.database.get_edge_by_id(eid), self.database)
 

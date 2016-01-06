@@ -22,7 +22,6 @@ class Results(object):
         path_compiled = self.create_readable_path(path_nodes, paths)
         # Create results in data frame
         names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
-        path_names = [paths[nodeX] for nodeX in path_nodes]
         paths_lengths_l = [path_lengths[nodeX] for nodeX in path_nodes]
         data = {'Concept': names,
                 'Distance': paths_lengths_l,
