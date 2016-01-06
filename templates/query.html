@@ -12,13 +12,19 @@
         <input type=text name=object placeholder="Object"/></p>
     <p><input type=submit value=Submit /></p>
 </form>
+{% if object %}
+<h2>Searching for <strong>{{ keyword } + {{ predication }} + {{ object }}</strong></h2>
+{% if predication %}
+<h2>Searching for <strong>{{ keyword } + {{ predication }}</strong></h2>
 {% if keyword %}
 <h2>Searching for <strong>{{ keyword }}</strong></h2>
+
 {% if error %}
 <p><font color="red">{{ error }}</font></p>
 {% else %}
 {{ results|safe }}
 {% endif %}
+
 {% endif%}
 
 

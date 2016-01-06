@@ -44,11 +44,11 @@ def submit_query():
         if object:
             results = RecommenderFactory(config).search_concept_predication_object(keyword, predication, object)
             table = results.to_html()
-            return render_template('query.html', keyword=keyword, results=table)
+            return render_template('query.html', keyword=keyword, predication=predication, object=object, results=table)
         elif predication:
             results = RecommenderFactory(config).search_concept_predication(keyword, predication)
             table = results.to_html()
-            return render_template('query.html', keyword=keyword, results=table)
+            return render_template('query.html', keyword=keyword, predication=predication, results=table)
         elif keyword:
             results = RecommenderFactory(config).search_concept(keyword)
             table = results.to_html()
