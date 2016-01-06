@@ -11,10 +11,13 @@ class Results(object):
         self.graph = graph
         self.table = None
 
-    def create_table(self, concept_node):
+    def create_table(self, concept_node, object_node=None):
         # Create table from distance results
         # Find the shortest paths in this subgraph
-        paths, path_lengths = self.graph.get_shortest_paths(concept_node)
+        if object_node:
+            paths, path_lengths = self.graph.get_shortest_paths(concept_node, object_node)
+        else:
+            paths, path_lengths = self.graph.get_shortest_paths(concept_node)
         path_nodes = path_lengths.keys()
         path_compiled = self.create_readable_path(path_nodes, paths)
         # Create results in data frame
@@ -26,9 +29,6 @@ class Results(object):
                 'Path': path_compiled}
         table = DataFrame(data, index=path_nodes)
         self.table = table.sort('Distance')
-
-    def create_table(self, concept_node, object_node):
-        paths, path_lengths = self.graph.get_shortest_paths(concept_node, object_node)
 
     def create_readable_path(self, path_nodes, paths):
         # Multiple paths may exist between nodes, we need to select the shortest paths
