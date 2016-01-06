@@ -3,7 +3,7 @@ from config import Config
 
 
 def test_traversal():
-    config = Config(False)
+    config = Config()
     rf = RecommenderFactory(config)
     rf.traverse_edges()
 

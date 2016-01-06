@@ -42,23 +42,29 @@ class Edge(GraphObject):
         GraphObject.__init__(self, relationship)
         self.database = database
         self.type = relationship.type
-        self.source_node = Node(relationship.start_node)
-        self.target_node = Node(relationship.end_node)
-        if 'weight' in relationship:
-            self.distance = relationship['weight']
-            print('Got Edge: %s:%s:%s Weight:%f' % (self.source_node.properties['NAME'], self.type,
-                                                    self.target_node.properties['NAME'], self.distance))
-        else:
-            self.distance = self.compute_distance()
-            self.set_weight()
+        self.source_node = Node(relationship.start_node, database=self.database)
+        self.target_node = Node(relationship.end_node, database=self.database)
+        # if 'weight' in relationship:
+        #     self.distance = relationship['weight']
+        #     print('Got Edge: %s:%s:%s Weight:%f' % (self.source_node.properties['NAME'], self.type,
+        #                                             self.target_node.properties['NAME'], self.distance))
+        # else:
+        self.distance = self.compute_distance()
+        self.set_weight()
 
     def compute_distance(self):
-        n_i = self.database.sum_count_one_to_many_edges(self.source_node)
-        n_j = self.database.sum_count_one_to_many_edges(self.target_node)
+        n_i = self.get_node_count(self.source_node)
+        n_j = self.get_node_count(self.target_node)
         n_i_j = int(self.properties['COUNT'])
         ksp = n_i_j/(n_i+n_j-n_i_j)
         d = 1/ksp - 1
         return d
+
+    def get_node_count(self, node):
+        if hasattr(node, 'count'):
+            return node.count
+        else:
+            return self.database.sum_count_one_to_many_edges(self.source_node)
 
     def set_weight(self):
         self.database.set_weight(self)
@@ -98,7 +104,7 @@ class Graph(nx.MultiDiGraph):
             # Add all attributes of Edge to network
 
     def get_node_by_name(self, name):
-        this_node = Node(self.database.get_node_by_name(name))
+        this_node = Node(self.database.get_node_by_name(name), self.database)
         self.update(this_node)
         return this_node
 
@@ -109,7 +115,7 @@ class Graph(nx.MultiDiGraph):
 
     def load_nodes_from_source(self, source, max_level):
         bfs_nodes = self.database.bfs_nodes(source, max_level=max_level)
-        [self.update(node=Node(node)) for node in bfs_nodes]
+        [self.update(node=Node(node, database=self.database)) for node in bfs_nodes]
 
     def load_source_edges(self, source):
         # Get all current graph nodes
