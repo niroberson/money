@@ -20,7 +20,7 @@ class Node(GraphObject):
         if database:
             self.database = database
 
-        if 'count' in node:
+        if hasattr(node, 'count'):
             self.count = node['count']
         else:
             self.count = self.compute_count()
