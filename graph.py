@@ -22,7 +22,7 @@ class Node(GraphObject):
 
         if hasattr(node, 'count'):
             self.count = node['count']
-        else:
+        elif database:
             self.count = self.compute_count()
             self.set_count()
 
