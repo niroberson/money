@@ -35,7 +35,12 @@ class RecommenderFactory(object):
         object_node = self.graph.get_node_by_name(object)
 
     @autojit
-    def traverse(self):
+    def traverse_edges(self):
         edge_ids = self.graph.database.get_all_edge_ids()
         for eid in edge_ids:
             self.graph.create_edge(eid[0])
+
+    def traverse_nodes(self):
+        node_ids = self.graph.database.get_all_node_ids()
+        for nid in node_ids:
+            self.graph.create_node(nid[0])

@@ -12,12 +12,29 @@ class GraphObject(object):
 
 
 class Node(GraphObject):
-    def __init__(self, node=None, id=None, prop=None):
+    def __init__(self, node=None, id=None, prop=None, database=None):
         GraphObject.__init__(self, node)
         if id:
             self.id = str(id)
         if prop:
             self.properties = prop
+        if database:
+            self.database = database
+
+        if 'count' in node:
+            self.count = node['count']
+            print('Got count:%s:%i' % (self.properties['NAME'], self.count))
+        else:
+            self.count = self.compute_count()
+            self.set_count()
+
+    def compute_count(self):
+        n_i = self.database.sum_count_one_to_many_edges(self)
+        return n_i
+
+    def set_count(self):
+        self.database.set_count(self)
+        print('Set count:%s:%i' % (self.properties['NAME'], self.count))
 
 
 class Edge(GraphObject):
@@ -36,8 +53,8 @@ class Edge(GraphObject):
             self.set_weight()
 
     def compute_distance(self):
-        n_i = self.database.sum_count_one_to_many_edges(self.id, self.source_node)
-        n_j = self.database.sum_count_one_to_many_edges(self.id, self.target_node)
+        n_i = self.database.sum_count_one_to_many_edges(self.source_node)
+        n_j = self.database.sum_count_one_to_many_edges(self.target_node)
         n_i_j = int(self.properties['COUNT'])
         ksp = n_i_j/(n_i+n_j-n_i_j)
         d = 1/ksp - 1
@@ -129,3 +146,6 @@ class Graph(nx.MultiDiGraph):
     @autojit
     def create_edge(self, eid):
         Edge(self.database.get_edge_by_id(eid), self.database)
+
+    def create_node(self, nid):
+        Node(node=self.database.get_node_by_id(nid), database=self.database)

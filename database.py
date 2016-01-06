@@ -91,14 +91,14 @@ class Database(object):
             edge_store.append(edgeX.r)
         return edge_store
 
-    def sum_count_one_to_many_edges(self, eid, source):
-        # If this edge is in the cache, pull from cache
-        if eid in self.n_cache:
-            return self.n_cache[eid]
+    def sum_count_one_to_many_edges(self, source):
+        # If this node is in the cache, pull from cache
+        if source.id in self.n_cache:
+            return self.n_cache[source.id]
         n_i = [int(edgeX.properties['COUNT']) for edgeX in self.one_to_many_edges(source=source)]
         n = sum(n_i)
         # Update cache
-        self.n_cache[eid] = n
+        self.n_cache[source.id] = n_i
         return n
 
     def count_one_to_many_edges(self, node):
@@ -138,4 +138,8 @@ class Database(object):
 
     def set_weight(self, edge):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(r)=" + str(edge.id) + " SET r.weight=" + str(edge.distance) + " RETURN r"
+        return self.execute_query(cypher_query)
+
+    def set_count(self, node):
+        cypher_query = "MATCH (a) WHERE id(a)=" + str(node.id) + " SET a.count=" + str(node.count) + " RETURN a"
         return self.execute_query(cypher_query)
