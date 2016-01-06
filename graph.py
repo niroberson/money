@@ -23,7 +23,6 @@ class Node(GraphObject):
 
         if 'count' in node:
             self.count = node['count']
-            print('Got count:%s:%i' % (self.properties['NAME'], self.count))
         else:
             self.count = self.compute_count()
             self.set_count()
@@ -34,7 +33,6 @@ class Node(GraphObject):
 
     def set_count(self):
         self.database.set_count(self)
-        print('Set count:%s:%i' % (self.properties['NAME'], self.count))
 
 
 class Edge(GraphObject):
@@ -44,13 +42,11 @@ class Edge(GraphObject):
         self.type = relationship.type
         self.source_node = Node(relationship.start_node, database=self.database)
         self.target_node = Node(relationship.end_node, database=self.database)
-        # if 'weight' in relationship:
-        #     self.distance = relationship['weight']
-        #     print('Got Edge: %s:%s:%s Weight:%f' % (self.source_node.properties['NAME'], self.type,
-        #                                             self.target_node.properties['NAME'], self.distance))
-        # else:
-        self.distance = self.compute_distance()
-        self.set_weight()
+        if 'weight' in relationship:
+            self.distance = relationship['weight']
+        else:
+            self.distance = self.compute_distance()
+            self.set_weight()
 
     def compute_distance(self):
         n_i = self.get_node_count(self.source_node)
@@ -69,11 +65,8 @@ class Edge(GraphObject):
             self.source_node.set_count()
             return n
 
-
     def set_weight(self):
         self.database.set_weight(self)
-        print('Set Edge: %s:%s:%s Weight:%f' % (self.source_node.properties['NAME'], self.type,
-                                                self.target_node.properties['NAME'], self.distance))
 
 
 class Graph(nx.MultiDiGraph):
@@ -86,12 +79,9 @@ class Graph(nx.MultiDiGraph):
     def update(self, node=None, edge=None):
         if node:
             self.add_node(node.id, properties=node.properties)
-            print('Added: %s' % (node.properties['NAME']))
         if edge:
             self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance,
                           properties=edge.properties, type=edge.type)
-            print('Added edge: %s:%s:%s to network' % (edge.source_node.properties['NAME'], edge.type,
-                                                                     edge.target_node.properties['NAME']))
 
     def update_from(self, nodes=None, edges=None):
         """
