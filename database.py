@@ -6,7 +6,6 @@ class Database(object):
     def __init__(self, config):
         self.config = config
         self.connection = self.connect()
-        self.n_cache = dict()
         http.socket_timeout = 9999
 
     def connect(self):
@@ -92,13 +91,8 @@ class Database(object):
         return edge_store
 
     def sum_count_one_to_many_edges(self, source):
-        # If this node is in the cache, pull from cache
-        if source.id in self.n_cache:
-            return self.n_cache[source.id]
         n_i = [int(edgeX.properties['COUNT']) for edgeX in self.one_to_many_edges(source=source)]
         n = sum(n_i)
-        # Update cache
-        self.n_cache[source.id] = n_i
         return n
 
     def count_one_to_many_edges(self, node):
