@@ -11,29 +11,30 @@ class RecommenderFactory(object):
     def search_concept(self, concept):
         concept_node = self.graph.get_node_by_name(concept)
         self.graph.create_subgraph(concept_node, max_level=1)
-        results = Results(self.config, self.graph, concept_node)
-        return results
+        results = Results(self.config, self.graph)
+        return results.create_table(concept_node)
 
     def search_concept_predication(self, concept, predication):
         concept_node = self.graph.get_node_by_name(concept)
         self.graph.create_subgraph(concept_node, predication=predication, max_level=1)
-        results = Results(self.config, self.graph, concept_node)
-        return results
+        results = Results(self.config, self.graph)
+        return results.create_table(concept_node)
 
     def search_concept_predication_object(self, concept, predication, object):
         concept_node = self.graph.get_node_by_name(concept)
         object_node = self.graph.get_node_by_name(object)
         self.graph.create_subgraph(concept_node, max_level=1)
         # Get the results
-        results = Results(self.config, self.graph, concept_node)
-        return results
+        results = Results(self.config, self.graph)
+        return results.create_table(concept_node)
 
     def search_concept_object(self, concept, object):
         concept_node = self.graph.get_node_by_name(concept)
         object_node = self.graph.get_node_by_name(object)
         # Get all direct and indirect paths connecting the two nodes
         self.graph.connect_two_nodes(concept_node, object_node)
-        return Results(self.config, self.graph, concept_node, object_node)
+        results =  Results(self.config, self.graph)
+        return results.create_table(concept_node, object_node)
 
     def traverse_edges(self):
         edge_ids = self.graph.database.get_all_edge_ids()

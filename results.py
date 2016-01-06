@@ -6,11 +6,10 @@ import os
 
 
 class Results(object):
-    def __init__(self, config, graph, concept_node):
+    def __init__(self, config, graph):
         self.config = config
         self.graph = graph
         self.table = None
-        self.create_table(concept_node)
 
     def create_table(self, concept_node):
         # Create table from distance results
