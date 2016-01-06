@@ -12,7 +12,8 @@ class RecommenderFactory(object):
         concept_node = self.graph.get_node_by_name(concept)
         self.graph.create_subgraph(concept_node, max_level=1)
         results = Results(self.config, self.graph)
-        return results.create_table(concept_node)
+        results.create_table(concept_node)
+        return results
 
     def search_concept_predication(self, concept, predication):
         concept_node = self.graph.get_node_by_name(concept)

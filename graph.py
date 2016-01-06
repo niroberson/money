@@ -146,12 +146,12 @@ class Graph(nx.MultiDiGraph):
                 self.update(node=edgeY.source_node)
                 self.update(node=edgeY.target_node)
 
-    def get_shortest_paths(self, source_node, target_node):
+    def get_shortest_paths(self, source_node, target_node=None):
         if target_node:
+            path_lengths, paths = nx.single_source_dijkstra(self, source_node.id, target_node.id)
+        else:
             paths = nx.single_source_dijkstra_path(self, source_node.id)
             path_lengths = nx.single_source_dijkstra_path_length(self, source_node.id)
-        else:
-            path_lengths, paths = nx.single_source_dijkstra(self, source_node.id, target_node.id)
         return paths, path_lengths
 
     def create_edge(self, eid):

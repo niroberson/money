@@ -29,5 +29,14 @@ def test_results():
     results, error = rf.search_concept(concept)
     print(results.table)
 
+
+def test_search_concept_object():
+    config = Config()
+    rf = RecommenderFactory(config)
+    concept = 'BRCA1'
+    object = 'Mitochondria'
+    results = rf.search_concept_object(concept, object)
+    print(results.table)
+
 if __name__ == "__main__":
     test_traversal()
