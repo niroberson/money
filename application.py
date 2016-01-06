@@ -22,6 +22,10 @@ def home():
 def submit_query():
     config = Config(DEBUG)
 
+    keyword = None
+    object = None
+    predication = None
+
     if request.method == 'POST':
         # First search for subject
         try:
@@ -41,10 +45,14 @@ def submit_query():
         except KeyError:
             pass
 
-        if object:
+        if object and predication:
             results = RecommenderFactory(config).search_concept_predication_object(keyword, predication, object)
             table = results.to_html()
             return render_template('query.html', keyword=keyword, predication=predication, object=object, results=table)
+        elif object:
+            results = RecommenderFactory(config).search_concept_object(keyword, object)
+            table = results.to_html()
+            return render_template('query.html', keyword=keyword, object=object, results=table)
         elif predication:
             results = RecommenderFactory(config).search_concept_predication(keyword, predication)
             table = results.to_html()

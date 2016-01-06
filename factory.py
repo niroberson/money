@@ -28,12 +28,12 @@ class RecommenderFactory(object):
         results = Results(self.config, self.graph, concept_node)
         return results
 
-    def search_concept_object(self, config, object):
-        concept_node = self.graph.get_node_by_name(object)
+    def search_concept_object(self, concept, object):
+        concept_node = self.graph.get_node_by_name(concept)
         object_node = self.graph.get_node_by_name(object)
         # Get all direct and indirect paths connecting the two nodes
         self.graph.connect_two_nodes(concept_node, object_node)
-
+        return Results(self.config, self.graph, concept_node, object_node)
 
     def traverse_edges(self):
         edge_ids = self.graph.database.get_all_edge_ids()

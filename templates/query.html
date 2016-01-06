@@ -12,20 +12,21 @@
         <input type=text name=object placeholder="Object"/></p>
     <p><input type=submit value=Submit /></p>
 </form>
-{% if object %}
-<h2>Searching for <strong>{{ keyword } + {{ predication }} + {{ object }}</strong></h2>
-{% if predication %}
-<h2>Searching for <strong>{{ keyword } + {{ predication }}</strong></h2>
-{% if keyword %}
+{% if predication and object %}
+<h2>Searching for <strong>{{ keyword }} + {{ predication }} + {{ object }}</strong></h2>
+{% elif object %}
+<h2>Searching for <strong>{{ keyword }} + {{ object }}</strong></h2>
+{% elif predication %}
+<h2>Searching for <strong>{{ keyword }} + {{ predication }}</strong></h2>
+{% elif keyword %}
 <h2>Searching for <strong>{{ keyword }}</strong></h2>
+{% endif %}
 
 {% if error %}
 <p><font color="red">{{ error }}</font></p>
-{% else %}
+{% elif results %}
 {{ results|safe }}
 {% endif %}
-
-{% endif%}
 
 
 </body>

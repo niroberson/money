@@ -28,6 +28,9 @@ class Results(object):
         table = DataFrame(data, index=path_nodes)
         self.table = table.sort('Distance')
 
+    def create_table(self, concept_node, object_node):
+        paths, path_lengths = self.graph.get_shortest_paths(concept_node, object_node)
+
     def create_readable_path(self, path_nodes, paths):
         # Multiple paths may exist between nodes, we need to select the shortest paths
         results = []
@@ -46,7 +49,7 @@ class Results(object):
                 # Get edge type (predication)
                 try:
                     eid, props = edge.popitem()
-                except KeyError:
+                except (KeyError, AttributeError):
                     continue
                 predication = props['type']
                 n1 = self.graph.get_local_node_by_id(np[0])
