@@ -137,6 +137,11 @@ class Graph(nx.MultiDiGraph):
         self.load_nodes_from_source(source_node, max_level=max_level)
         self.load_edges_from_graph(source_node, predication=predication, max_level=max_level)
 
+    def connect_two_nodes(self, node1, node2):
+        edges = self.database.one_to_one_edges(node1, node2, max_level=2)
+        edges = [Edge(edgeX, self.database) for edgeX in edges]
+        [self.update(edge=edgeX) for edgeX in edges]
+
     def get_shortest_paths(self, source_node):
         paths = nx.single_source_dijkstra_path(self, source_node.id)
         path_lengths = nx.single_source_dijkstra_path_length(self, source_node.id)

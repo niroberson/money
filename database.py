@@ -65,9 +65,9 @@ class Database(object):
             node_store.append(nodeX.b)
         return node_store
 
-    def one_to_one_edges(self, node1, node2):
+    def one_to_one_edges(self, node1, node2, max_level=1):
         # Not necessarily one edge between nodes can't take [0] need to specify rel label
-        cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(node1.id) + " AND id(b)=" + str(node2.id) + " RETURN r"
+        cypher_query = "MATCH (a)-[r" + "*0.." + str(max_level) + "]-(b) WHERE id(a)=" + str(node1.id) + " AND id(b)=" + str(node2.id) + " RETURN r"
         edge_store = []
         for edgeX in self.execute_query(cypher_query):
             edge_store.append(edgeX.r)
