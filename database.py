@@ -10,9 +10,9 @@ class Database(object):
 
     def connect(self):
         if self.config.dev_flag:
-            return self.connect_remote()
+            return self.connect_local()
         else:
-            return self.connect_remote()
+            return self.connect_local()
             # TODO: return self.connect_production()
 
     def connect_local(self):
@@ -53,7 +53,7 @@ class Database(object):
 
     def get_all_edge_ids(self):
         cypher_query = "MATCH (a)-[r]-(b) RETURN id(r)"
-        return self.execute_query(cypher_query, 100)
+        return self.execute_query(cypher_query, 1000)
 
     def one_to_many_nodes(self, node=None, id=None):
         if node:

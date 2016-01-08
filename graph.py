@@ -20,7 +20,7 @@ class Node(GraphObject):
         if database:
             self.database = database
 
-        if hasattr(node, 'count'):
+        if node and 'count' in node:
             self.count = node['count']
         elif database:
             self.count = self.compute_count()
@@ -41,8 +41,8 @@ class Edge(GraphObject):
         self.type = relationship.type
         self.source_node = Node(relationship.start_node, database=self.database)
         self.target_node = Node(relationship.end_node, database=self.database)
-        if 'weight' in relationship:
-            self.distance = relationship['weight']
+        if 'weight' in relationship.properties:
+            self.distance = relationship.properties['weight']
         else:
             self.distance = self.compute_distance()
             self.set_weight()
