@@ -58,8 +58,8 @@ class Edge(GraphObject):
         return d
 
     def get_node_count(self, node):
-        if 'count' in node:
-            return node['count']
+        if hasattr(node, 'count'):
+            return node.count
         else:
             n = self.database.sum_count_one_to_many_edges(self.source_node)
             self.source_node.count = n

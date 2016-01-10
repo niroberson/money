@@ -5,7 +5,7 @@ from config import Config
 def test_traversal():
     config = Config(False)
     rf = RecommenderFactory(config)
-    rf.traverse_edges_to_neo()
+    rf.traverse_edges_to_csv()
 
 
 def test_node_traversal():
