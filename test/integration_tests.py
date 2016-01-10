@@ -38,5 +38,16 @@ def test_search_concept_object():
     results = rf.search_concept_object(concept, object)
     print(results.table)
 
+
+def test_search_concept_predicate_object():
+    config = Config()
+    rf = RecommenderFactory(config)
+    concept = 'BRCA1'
+    predicate = 'PART_OF'
+    object = 'Mitochondria'
+    results = rf.search_concept_predicate_object(concept, predicate, object)
+    print(results.table)
+
+
 if __name__ == "__main__":
-    test_traversal()
+    test_search_concept_predicate_object()

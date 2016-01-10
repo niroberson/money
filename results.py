@@ -38,6 +38,7 @@ class Results(object):
             for nodeY in paths[nodeX]:
                 if last_node:
                     node_pairs.append([last_node, nodeY])
+                    last_node = nodeY
                 else:
                     last_node = nodeY
 

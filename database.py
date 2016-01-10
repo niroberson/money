@@ -93,7 +93,7 @@ class Database(object):
     def get_predication(self, source=None, predicate=None, target=None):
         cypher_query = "MATCH (a)-[r:" + predicate + "]-(b) WHERE id(a)=" + str(source.id) + " AND id(b)=" + str(target.id) + " RETURN r"
         edge = self.execute_query(cypher_query)
-        return edge.r
+        return edge[0].r
 
     def sum_count_one_to_many_edges(self, source):
         n_i = [int(edgeX.properties['COUNT']) for edgeX in self.one_to_many_edges(source=source)]

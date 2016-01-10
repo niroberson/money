@@ -4,7 +4,7 @@ from flask import Flask, request, session, g ,redirect, url_for, \
 from factory import RecommenderFactory
 from config import Config
 
-DEBUG = False
+DEBUG = True
 SECRET_KEY = 'development key'
 USERNAME = 'admin'
 PASSWORD = 'default'
@@ -46,7 +46,7 @@ def submit_query():
             pass
 
         if object and predication:
-            results = RecommenderFactory(config).search_concept_predication_object(keyword, predication, object)
+            results = RecommenderFactory(config).search_concept_predicate_object(keyword, predication, object)
             table = results.to_html()
             return render_template('query.html', keyword=keyword, predication=predication, object=object, results=table)
         elif object:

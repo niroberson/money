@@ -116,7 +116,7 @@ class Graph(nx.MultiDiGraph):
         # Get all current graph nodes
         nodes = self.nodes()
         # Get these edges
-        edges = self.database.one_to_many_edges(source, nodes)
+        edges = self.database.one_to_many_edges(source, targets=nodes)
         edges = [Edge(edgeX, self.database) for edgeX in edges]
         [self.update(edge=edgeX) for edgeX in edges]
 
@@ -149,7 +149,9 @@ class Graph(nx.MultiDiGraph):
                 self.update(node=edgeY.target_node)
 
     def get_edge_by_predication(self, node1, predicate, node2):
-        self.database.get
+        edge = self.database.get_predication(node1, predicate, node2)
+        edge = Edge(edge, self.database)
+        self.update(edge=edge)
 
     def get_shortest_paths(self, source_node, target_node=None):
         if target_node:

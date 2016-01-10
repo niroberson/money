@@ -23,12 +23,13 @@ class RecommenderFactory(object):
         results.create_table(concept_node)
         return results
 
-    def search_concept_predication_object(self, concept, predication, object):
+    def search_concept_predicate_object(self, concept, predication, object):
         concept_node = self.graph.get_node_by_name(concept)
         object_node = self.graph.get_node_by_name(object)
         self.graph.get_edge_by_predication(concept_node, predication, object_node)
         self.graph.load_nodes_from_source(object_node, max_level=1)
         self.graph.load_source_edges(object_node)
+        self.graph.load_source_edges(concept_node)
         # Get the results
         results = Results(self.config, self.graph)
         results.create_table(concept_node)
