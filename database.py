@@ -10,9 +10,9 @@ class Database(object):
 
     def connect(self):
         if self.config.dev_flag:
-            return self.connect_local()
+            return self.connect_remote()
         else:
-            return self.connect_local()
+            return self.connect_remote()
             # TODO: return self.connect_production()
 
     def connect_local(self):
@@ -89,6 +89,11 @@ class Database(object):
         for edgeX in self.execute_query(cypher_query, 100):
             edge_store.append(edgeX.r)
         return edge_store
+
+    def get_predication(self, source=None, predicate=None, target=None):
+        cypher_query = "MATCH (a)-[r:" + predicate + "]-(b) WHERE id(a)=" + str(source.id) + " AND id(b)=" + str(target.id) + " RETURN r"
+        edge = self.execute_query(cypher_query)
+        return edge.r
 
     def sum_count_one_to_many_edges(self, source):
         n_i = [int(edgeX.properties['COUNT']) for edgeX in self.one_to_many_edges(source=source)]

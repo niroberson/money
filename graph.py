@@ -45,7 +45,7 @@ class Edge(GraphObject):
             self.distance = relationship.properties['weight']
         else:
             self.distance = self.compute_distance()
-            self.set_weight()
+            # self.set_weight()
             # Instead of setting weight, output this rel to rels csv
 
 
@@ -147,6 +147,9 @@ class Graph(nx.MultiDiGraph):
                 self.update(edge=edgeY)
                 self.update(node=edgeY.source_node)
                 self.update(node=edgeY.target_node)
+
+    def get_edge_by_predication(self, node1, predicate, node2):
+        self.database.get
 
     def get_shortest_paths(self, source_node, target_node=None):
         if target_node:
