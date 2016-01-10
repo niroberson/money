@@ -46,6 +46,8 @@ class Edge(GraphObject):
         else:
             self.distance = self.compute_distance()
             self.set_weight()
+            # Instead of setting weight, output this rel to rels csv
+
 
     def compute_distance(self):
         n_i = self.get_node_count(self.source_node)
@@ -56,8 +58,8 @@ class Edge(GraphObject):
         return d
 
     def get_node_count(self, node):
-        if hasattr(node, 'count'):
-            return node.count
+        if 'count' in node:
+            return node['count']
         else:
             n = self.database.sum_count_one_to_many_edges(self.source_node)
             self.source_node.count = n
@@ -158,7 +160,7 @@ class Graph(nx.MultiDiGraph):
         pass
 
     def create_edge(self, eid):
-        Edge(self.database.get_edge_by_id(eid), self.database)
+        return Edge(self.database.get_edge_by_id(eid), self.database)
 
     def create_node(self, nid):
         Node(node=self.database.get_node_by_id(nid), database=self.database)
