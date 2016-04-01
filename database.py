@@ -6,7 +6,7 @@ class Database(object):
     def __init__(self, config):
         self.config = config
         self.connection = self.connect()
-        http.socket_timeout = 9999
+        http.socket_timeout = 1000
 
     def connect(self):
         if self.config.dev_flag:
