@@ -2,6 +2,7 @@ from database import Database
 from config import Config
 from graph import Node
 import numpy as np
+from pandas import DataFrame
 
 
 class Analyzer(object):
@@ -14,10 +15,11 @@ class Analyzer(object):
         return nodes
 
     def calculate_features(self, targets):
-        cn = np.array([a.common_neighbors(source, Node(target)) for target in targets])
-        jc = np.array([a.jaccards_coefficient(source, Node(target)) for target in targets])
-        ad = np.array([a.adamic(source, Node(target)) for target in targets])
-        self.features = np.array((cn, jc, ad))
+        cn = np.array([a.common_neighbors(source, target) for target in targets])
+        jc = np.array([a.jaccards_coefficient(source, target) for target in targets])
+        ad = np.array([a.adamic(source, target) for target in targets])
+        pa = np.array([a.preferential_attachment(source, target) for target in targets])
+        self.features = np.array((cn, jc, ad, pa))
 
     def common_neighbors(self, source, target):
         nodes1 = self.database.one_to_many_nodes(source)
@@ -41,7 +43,15 @@ class Analyzer(object):
         n1 = set([Node(n).id for n in nodes1])
         n2 = set([Node(n).id for n in nodes2])
         n3 = n1.intersection(n2)
-        score = sum([1 / np.log(len(self.database.one_to_many_nodes(Node(n)))) for n in n3])
+        score = sum([1 / np.log(len(self.database.one_to_many_nodes(Node(self.database.get_edge_by_id(n))))) for n in n3])
+        return score
+
+    def preferential_attachment(self, source, target):
+        nodes1 = self.database.one_to_many_nodes(source)
+        nodes2 = self.database.one_to_many_nodes(target)
+        n1 = set([Node(n).id for n in nodes1])
+        n2 = set([Node(n).id for n in nodes2])
+        score = len(n1) * len(n2)
         return score
 
 
@@ -49,5 +59,9 @@ if __name__ == "__main__":
     a = Analyzer()
     source = Node(a.database.get_node_by_name('BRCA1'))
     targets = a.get_subgraph_nodes(source)
+    targets = [Node(target) for target in targets]
     a.calculate_features(targets)
-    pass
+    features = DataFrame(a.features.T)
+    index = [target.id for target in targets]
+    features.to_csv('features.csv', index=index)
+
