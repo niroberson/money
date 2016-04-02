@@ -5,28 +5,24 @@ from graph import Node, Edge, Graph
 
 class Analyzer(object):
     def __init__(self):
-        self.database = Database(Config(True))
+        self.database = Database(Config(False))
 
     def get_subgraph_nodes(self, source):
-        source_node = Node(self.database.get_node_by_name(source))
-        nodes = self.database.bfs_nodes(source_node, max_level=2)
+        nodes = self.database.bfs_nodes(source, max_level=2)
         return nodes
 
-    def PageRank(self, source, target):
-        pass
+    def commonNeighbors(self, source, target):
+        nodes1 = self.database.one_to_many_nodes(source)
+        nodes2 = self.database.one_to_many_nodes(target)
 
-    def CommonNeighbors(self, source, target):
-        pass
-
-    def KSP(self, source, target):
-        n_i = self.get_node_count(source)
-        n_j = self.get_node_count(target)
-        n_i_j = int(self.properties['COUNT'])
-        ksp = n_i_j/(n_i+n_j-n_i_j)
-        d = 1/ksp - 1
-        return d
-
+        n1 = set([Node(n).id for n in nodes1])
+        n2 = set([Node(n).id for n in nodes2])
+        score = len(n1.intersection(n2))
+        return score
 
 if __name__ == "__main__":
     a = Analyzer()
-    a.get_subgraph_nodes('BRCA1')
+    source = Node(a.database.get_node_by_name('BRCA1'))
+    targets = a.get_subgraph_nodes(source)
+    for target in targets:
+        print(a.commonNeighbors(source, Node(target)))
