@@ -14,9 +14,10 @@ class Analyzer(object):
         return nodes
 
     def calculate_features(self, targets):
-        cn = [a.common_neighbors(source, Node(target)) for target in targets]
-        jc = [a.jaccards_coefficient(source, Node(target)) for target in targets]
-        self.features = [cn, jc]
+        cn = np.array([a.common_neighbors(source, Node(target)) for target in targets])
+        jc = np.array([a.jaccards_coefficient(source, Node(target)) for target in targets])
+        ad = np.array([a.adamic(source, Node(target)) for target in targets])
+        self.features = np.array((cn, jc, ad))
 
     def common_neighbors(self, source, target):
         nodes1 = self.database.one_to_many_nodes(source)
@@ -39,9 +40,10 @@ class Analyzer(object):
         nodes2 = self.database.one_to_many_nodes(target)
         n1 = set([Node(n).id for n in nodes1])
         n2 = set([Node(n).id for n in nodes2])
-
         n3 = n1.intersection(n2)
-        score = sum([1 / np.log(len(self.database.))])
+        score = sum([1 / np.log(len(self.database.one_to_many_nodes(Node(n)))) for n in n3])
+        return score
+
 
 if __name__ == "__main__":
     a = Analyzer()

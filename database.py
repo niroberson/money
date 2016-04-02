@@ -61,7 +61,7 @@ class Database(object):
         elif id:
             cypher_query = "MATCH (a)-[r]-(b) WHERE id(a)=" + str(id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query, 100):
+        for nodeX in self.execute_query(cypher_query, 50):
             node_store.append(nodeX.b)
         return node_store
 
@@ -121,7 +121,7 @@ class Database(object):
         else:
             cypher_query = "START n=node(" + str(id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query, 160):
+        for nodeX in self.execute_query(cypher_query, 50):
             node_store.append(nodeX.b)
         return node_store
 
