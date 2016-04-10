@@ -2,18 +2,6 @@ from factory import RecommenderFactory
 from config import Config
 
 
-def test_traversal():
-    config = Config(False)
-    rf = RecommenderFactory(config)
-    rf.traverse_edges_to_csv()
-
-
-def test_node_traversal():
-    config = Config(False)
-    rf = RecommenderFactory(config)
-    rf.traverse_nodes()
-
-
 def test_viz():
     config = Config()
     rf = RecommenderFactory(config)

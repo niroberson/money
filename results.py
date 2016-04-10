@@ -13,7 +13,6 @@ class Results(object):
 
     def create_table(self, concept_node, object_node=None):
         # Create table from distance results
-        # Find the shortest paths in this subgraph
         nodes = self.graph.nodes()
         names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in nodes]
         data = {'Concept': names}
