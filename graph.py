@@ -41,24 +41,6 @@ class Edge(GraphObject):
         self.type = relationship.type
         self.source_node = Node(relationship.start_node, database=self.database)
         self.target_node = Node(relationship.end_node, database=self.database)
-        if 'weight' in relationship.properties:
-            self.distance = relationship.properties['weight']
-        else:
-            self.distance = self.compute_distance()
-            # self.set_weight()
-            # Instead of setting weight, output this rel to rels csv
-
-    def get_node_count(self, node):
-        if hasattr(node, 'count'):
-            return node.count
-        else:
-            n = self.database.sum_count_one_to_many_edges(self.source_node)
-            self.source_node.count = n
-            self.source_node.set_count()
-            return n
-
-    def set_weight(self):
-        self.database.set_weight(self)
 
 
 class Graph(nx.MultiDiGraph):
