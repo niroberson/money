@@ -26,7 +26,7 @@ def test_results():
     config = Config()
     rf = RecommenderFactory(config)
     concept = 'BRCA1'
-    results, error = rf.search_concept(concept)
+    results = rf.search_concept(concept)
     print(results.table)
 
 
@@ -49,5 +49,14 @@ def test_search_concept_predicate_object():
     print(results.table)
 
 
+def test_search_concept_predicate():
+    config = Config()
+    rf = RecommenderFactory(config)
+    concept = 'Melatonin'
+    predicate = 'TREATS'
+    results = rf.search_concept_predication(concept, predicate)
+    print(results.table)
+
+
 if __name__ == "__main__":
-    test_search_concept_predicate_object()
+    test_results()

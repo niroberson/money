@@ -77,7 +77,7 @@ class Graph(nx.MultiDiGraph):
         self.config = config
 
     def update(self, node=None, edge=None):
-        if node:
+        if node and node.properties['NAME']:
             self.add_node(node.id, properties=node.properties)
         if edge:
             self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance,
@@ -109,7 +109,7 @@ class Graph(nx.MultiDiGraph):
 
     def load_nodes_from_source(self, source, max_level):
         bfs_nodes = self.database.bfs_nodes(source, max_level=max_level)
-        [self.update(node=Node(node, database=self.database)) for node in bfs_nodes]
+        [self.update(node=Node(node, prop=node.properties, database=self.database)) for node in bfs_nodes]
 
     def load_source_edges(self, source):
         # Get all current graph nodes
@@ -159,12 +159,3 @@ class Graph(nx.MultiDiGraph):
             paths = nx.single_source_dijkstra_path(self, source_node.id)
             path_lengths = nx.single_source_dijkstra_path_length(self, source_node.id)
         return paths, path_lengths
-
-    def all_pairs_shortest_paths(self, source_node):
-        pass
-
-    def create_edge(self, eid):
-        return Edge(self.database.get_edge_by_id(eid), self.database)
-
-    def create_node(self, nid):
-        Node(node=self.database.get_node_by_id(nid), database=self.database)

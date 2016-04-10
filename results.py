@@ -14,48 +14,10 @@ class Results(object):
     def create_table(self, concept_node, object_node=None):
         # Create table from distance results
         # Find the shortest paths in this subgraph
-        if object_node:
-            paths, path_lengths = self.graph.get_shortest_paths(concept_node, object_node)
-        else:
-            paths, path_lengths = self.graph.get_shortest_paths(concept_node)
-        path_nodes = path_lengths.keys()
-        path_compiled = self.create_readable_path(path_nodes, paths)
-        # Create results in data frame
-        names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in path_nodes]
-        paths_lengths_l = [path_lengths[nodeX] for nodeX in path_nodes]
-        data = {'Concept': names,
-                'Distance': paths_lengths_l,
-                'Path': path_compiled}
-        table = DataFrame(data, index=path_nodes)
-        self.table = table.sort('Distance')
-
-    def create_readable_path(self, path_nodes, paths):
-        # Multiple paths may exist between nodes, we need to select the shortest paths
-        results = []
-        for nodeX in path_nodes:
-            last_node = None
-            node_pairs = []
-            for nodeY in paths[nodeX]:
-                if last_node:
-                    node_pairs.append([last_node, nodeY])
-                    last_node = nodeY
-                else:
-                    last_node = nodeY
-
-            path_comp = ''
-            for np in node_pairs:
-                edge = self.graph.get_edge_data(np[0], np[1])
-                # Get edge type (predication)
-                try:
-                    eid, props = edge.popitem()
-                except (KeyError, AttributeError):
-                    continue
-                predication = props['type']
-                n1 = self.graph.get_local_node_by_id(np[0])
-                n2 = self.graph.get_local_node_by_id(np[1])
-                path_comp += (':').join([n1.properties['NAME'], predication, n2.properties['NAME']])
-            results.append(path_comp)
-        return results
+        nodes = self.graph.nodes()
+        names = [self.graph.node[nodeX]['properties']['NAME'] for nodeX in nodes]
+        data = {'Concept': names}
+        self.table = DataFrame(data)
 
     def to_html(self):
         return self.table.to_html()
