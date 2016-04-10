@@ -48,14 +48,6 @@ class Edge(GraphObject):
             # self.set_weight()
             # Instead of setting weight, output this rel to rels csv
 
-    def compute_distance(self):
-        n_i = self.get_node_count(self.source_node)
-        n_j = self.get_node_count(self.target_node)
-        n_i_j = int(self.properties['COUNT'])
-        ksp = n_i_j/(n_i+n_j-n_i_j)
-        d = 1/ksp - 1
-        return d
-
     def get_node_count(self, node):
         if hasattr(node, 'count'):
             return node.count
