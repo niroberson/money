@@ -57,20 +57,6 @@ class Graph(nx.MultiDiGraph):
             self.add_edge(edge.source_node.id, edge.target_node.id, key=edge.id, weight=edge.distance,
                           properties=edge.properties, type=edge.type)
 
-    def update_from(self, nodes=None, edges=None):
-        """
-        Method to update graph from given nodes and edges
-        :return:
-        """
-        # Add nodes into graph
-        for node in nodes:
-            self.add_node(node.id, properties=node.properties)  # Add attributes of Node to network
-
-        # Add edges into graph
-        for edge in edges:
-            self.add_edge(edge.source_node.id, edge.target_node.id, weight=edge.distance, properties=edge.properties)
-            # Add all attributes of Edge to network
-
     def get_node_by_name(self, name):
         this_node = Node(self.database.get_node_by_name(name), database=self.database)
         self.update(this_node)
