@@ -6,6 +6,7 @@ import numpy as np
 from config import Config
 from database import Database
 
+
 class Classify(object):
 
     def __init__(self):

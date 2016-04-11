@@ -115,13 +115,13 @@ class Database(object):
         count = self.execute_query(cypher_query)
         return count.one
 
-    def bfs_nodes(self, source_node=None, id=None, max_level=1):
-        if source_node:
-            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN b"
+    def bfs_nodes(self, source_node, predication=None, id=None, max_level=1):
+        if predication:
+            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r:" + predication + "*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN b"
         else:
-            cypher_query = "START n=node(" + str(id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(id) + " RETURN b"
+            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN b"
         node_store = []
-        for nodeX in self.execute_query(cypher_query, 200):
+        for nodeX in self.execute_query(cypher_query, 100):
             node_store.append(nodeX.b)
         return node_store
 
@@ -131,9 +131,17 @@ class Database(object):
         else:
             cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r"
         edge_store = []
-        for edgeX in self.execute_query(cypher_query, 160):
+        for edgeX in self.execute_query(cypher_query, 100):
             edge_store.append(edgeX.r)
         return edge_store
+
+    def bfs(self, source_node, predication=None, max_level=1):
+        if predication:
+            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r:" + predication + "*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r, b"
+        else:
+            cypher_query = "START n=node(" + str(source_node.id) + ") MATCH (n)-[r*0.." + str(max_level) + "]->(b) WHERE NOT id(b)=" + str(source_node.id) + " RETURN r, b"
+        node_store  = []
+        edge_store = []
 
     def set_weight(self, edge):
         cypher_query = "MATCH (a)-[r]-(b) WHERE id(r)=" + str(edge.id) + " SET r.weight=" + str(edge.distance) + " RETURN r"
